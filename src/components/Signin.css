@@ -13,7 +13,6 @@
   background-image: url('../assets/scsvmv_img1.jpg');
   background-size: cover;
   background-position: center;
-  filter: blur(4px) brightness(0.8);
   z-index: -1;
 }
 
@@ -41,7 +40,7 @@
   margin-bottom: 8px;
 }
 .signin-header h2 {
-  color: #fff;
+  color: black;
 }
 
 .logo-img {

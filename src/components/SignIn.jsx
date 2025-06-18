@@ -1,16 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Signin.css';
 import logo from '../assets/logo.png';
+import { signin } from "../services/auth";
 
 const SignIn = () => {
   const navigate = useNavigate();
 
-  const handleSignIn = (e) => {
+  // State for form fields
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignIn = async (e) => {
     e.preventDefault();
 
-    // Redirect to dashboard
-    navigate('/dashboard');
+    try {
+      // Optional: add real sign-in logic here
+      const result = await signin({ email, password });
+
+      if (result?.error) {
+        console.error("Sign-in failed:", result.error.message);
+      } else {
+        // Navigate to dashboard if successful
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      console.error("Unexpected error during sign-in:", err.message);
+    }
   };
 
   return (
@@ -22,15 +38,29 @@ const SignIn = () => {
             <img src={logo} alt="Logo" className="logo-img" />
             <h2>Sign In</h2>
           </div>
+
           <form onSubmit={handleSignIn}>
             <div className="form-group">
-              <input type="email" placeholder="Email" required />
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
             <div className="form-group">
-              <input type="password" placeholder="Password" required />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
             </div>
             <button type="submit" className="signin-btn">Sign In</button>
           </form>
+
           <div className="signup-link">
             Don't have an account? <Link to="/">Sign Up</Link>
           </div>

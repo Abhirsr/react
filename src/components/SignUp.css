@@ -25,7 +25,6 @@ html, body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  filter: blur(4px) brightness(0.8);
   z-index: -1;
 }
 
@@ -42,13 +41,14 @@ html, body {
 /* Signup card with glass effect */
 .signup-card {
   background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(12px);
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   width: 350px;
-  color: #fff;
+  color:black;
+
 }
 
 /* Header */
@@ -57,7 +57,7 @@ html, body {
   margin-bottom: 20px;
 }
 .logo-img {
-  width: 90px;
+  width: 100px;
   margin-bottom: 10px;
 }
 
@@ -77,11 +77,11 @@ html, body {
   border: none;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.3);
-  color: #fff;
+  color: #FF8C00;
   font-weight: bold;
 }
 .form-group input::placeholder {
-  color: #eee;
+  color:black;
 }
 
 /* Sign Up button */
@@ -106,10 +106,10 @@ html, body {
 .signin-link {
   text-align: center;
   margin-top: 10px;
-  color: #fff;
+  color: black;
 }
 .signin-link a {
-  color: #fff;
+  color: black;
   text-decoration: underline;
 }
 .signin-link a:hover {

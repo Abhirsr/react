@@ -1,45 +1,149 @@
+:root {
+  --primary-blue: #2c3e50;
+  --light-blue: #3498db;
+  --header-bg-color: #ecf0f1;
+  --text-color: #333333;
+  --light-text-color: #555555;
+  --white: #ffffff;
+  --shadow-light: rgba(0, 0, 0, 0.08);
+  --shadow-medium: rgba(0, 0, 0, 0.12);
+}
+
 .dashboard-container {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8f8f8;
+  font-family: 'Roboto', 'Arial', sans-serif;
 }
 
 .dashboard-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color:lightskyblue;
-  color: #0b0b0b;
-  padding: 12px 24px;
-  height: 60px;
+  background-color: var(--header-bg-color);
+  color: var(--primary-blue);
+  padding: 15px 30px;
+  height: 70px;
+  box-shadow: 0 2px 8px var(--shadow-light);
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .menu-btn {
-  font-size: 22px;
+  font-size: 28px;
   background: none;
   border: none;
-  color: rgb(11, 11, 11);
+  color: var(--primary-blue);
   cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.menu-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .header-title {
   display: flex;
   align-items: center;
+  gap: 15px;
 }
 
 .dashboard-logo {
-  height: 40px;
-  margin-right: 12px;
+  height: 50px;
+  width: auto;
+  flex-shrink: 0;
 }
 
-.header-title h1 {
-  font-size: 22px;
-  margin: 0;
+.institution-names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-color);
 }
+
+.institution-names h3 {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.3;
+  text-align: center;
+  color: var(--light-text-color);
+  font-weight: 400;
+}
+
+.institution-names h2 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--primary-blue);
+}
+
 
 .welcome-text {
   font-size: 16px;
+  font-weight: 500;
+  color: var(--light-text-color);
 }
 
 .dashboard-content {
-  padding: 20px;
+  flex-grow: 1;
+  padding: 30px;
+  background-color: var(--white);
+  border-radius: 8px;
+  margin: 20px;
+  box-shadow: 0 4px 12px var(--shadow-medium);
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    padding: 10px 15px;
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .header-title {
+    flex-direction: column;
+    margin: 10px 0;
+  }
+
+  .institution-names h3 {
+    font-size: 14px;
+  }
+
+  .institution-names h2 {
+    font-size: 17px;
+  }
+
+  .menu-btn {
+    order: -1;
+    margin-right: auto;
+  }
+
+  .welcome-text {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .dashboard-content {
+    margin: 10px;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: center;
+  }
+  .menu-btn {
+    margin-bottom: 10px;
+  }
 }
