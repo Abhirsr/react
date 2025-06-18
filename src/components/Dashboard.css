@@ -1,0 +1,45 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color:lightskyblue;
+  color: #0b0b0b;
+  padding: 12px 24px;
+  height: 60px;
+}
+
+.menu-btn {
+  font-size: 22px;
+  background: none;
+  border: none;
+  color: rgb(11, 11, 11);
+  cursor: pointer;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-logo {
+  height: 40px;
+  margin-right: 12px;
+}
+
+.header-title h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.welcome-text {
+  font-size: 16px;
+}
+
+.dashboard-content {
+  padding: 20px;
+}

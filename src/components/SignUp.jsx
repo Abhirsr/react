@@ -1,40 +1,49 @@
 import React from "react";
 import "./SignUp.css";
-import logo from "../assets/logo-2022.jpg";
+import logo from "../assets/logo.png"
+import { Link } from 'react-router-dom';
 
 function SignUp() {
   return (
+    <div className="signup-wrapper">
+      {/* Blurred Background */}
+      <div className="signup-background"></div>
     <div className="signup-container">
       <div className="signup-card">
         <div className="signup-header">
           <img src={logo} alt="Logo" className="logo-img" />
-          <h2>Sign Up</h2>
+          <h2>Sign up</h2>
         </div>
 
         <form>
           <div className="form-group">
-            <label>Name:</label>
-            <input type="text" placeholder="Enter your name" required />
+            <input type="text" placeholder="Name" required />
           </div>
 
           <div className="form-group">
-            <label>Email:</label>
-            <input type="email" placeholder="Enter your email" required />
+            <input type="email" placeholder="Email" required />
           </div>
 
           <div className="form-group">
-            <label>Register Number:</label>
-            <input type="text" placeholder="Enter register number" required />
+            <input type="text" placeholder="Register number" required />
           </div>
 
           <div className="form-group">
-            <label>Password:</label>
-            <input type="password" placeholder="Enter your password" required />
+            <input type="password" placeholder="Password" required />
           </div>
 
           <button type="submit" className="signup-btn">Sign Up</button>
+          <div className="remember-me">
+            <input type="checkbox" id="remember"/>
+            <label htmlFor="remember">Remember me</label>
+        
+          </div>
+          <p className="signin-link">
+            Already have account? <Link to="/signin">Sign In</Link>
+          </p>
         </form>
       </div>
+    </div>
     </div>
   );
 }
