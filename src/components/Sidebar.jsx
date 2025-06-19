@@ -1,19 +1,37 @@
 import React from 'react';
 import './Sidebar.css';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Sidebar = ({ onClose }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleNavigation = (path) => {
+    navigate(path);
+    onClose();
+  };
+
   return (
     <div className="sidebar">
       <button className="back-btn" onClick={onClose}>← Back</button>
       <h2>Dashboard</h2>
       <ul>
-        <li>Medical Leave</li>
-        <li>On-duty Leave</li>
-        <li>Internship Permission</li>
-        <li>Leave Form</li>
-        <li>Gate-pass</li>
-        <li>Requests</li>
-        <li>History</li>
+        {[
+          { name: 'Medical Leave', path: '/medicalleave' },
+          { name: 'On-duty Leave', path: '/ondutyleave' },
+          { name: 'Internship Permission', path: '/internshippermission' },
+          { name: 'Leave Form', path: '/leaveform' },
+          { name: 'Gate-pass', path: '/gatepass' },
+          { name: 'Requests', path: '/requests' },
+        ].map(({ name, path }) => (
+          <li
+            key={path}
+            className={location.pathname === path ? 'active' : ''}
+            onClick={() => handleNavigation(path)}
+          >
+            {name}
+          </li>
+        ))}
       </ul>
     </div>
   );

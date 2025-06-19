@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
-import Dashboard from './components/Dashboard';
-import Sidebar from './components/Sidebar';
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import Dashboard from "./components/Dashboard";
+import Sidebar from "./components/Sidebar";
+import PrivateRoute from "./components/privateRoute";
+import OnDutyLeave from "./components/OnDutyLeave";
+import MedicalLeave from "./components/MedicalLeave";
+import GatePass from "./components/GatePass";
+import LeaveForm from "./components/LeaveForm";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -17,18 +28,66 @@ const App = () => {
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
-        
+
         <Route
           path="/dashboard"
           element={
-            <div className="app-container">
-              <Dashboard toggleSidebar={toggleSidebar} />
-              {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
-              <main className="app-content">
-              </main>
-            </div>
+            <PrivateRoute>
+              <div className="app-container">
+                <Dashboard toggleSidebar={toggleSidebar} />
+                {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
+              </div>
+            </PrivateRoute>
           }
         />
+
+        <Route
+          path="/ondutyleave"
+          element={
+            <PrivateRoute>
+              <div className="app-container">
+                <OnDutyLeave toggleSidebar={toggleSidebar} />
+                {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
+              </div>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/medicalleave"
+          element={
+            <PrivateRoute>
+              <div className="app-container">
+                <MedicalLeave toggleSidebar={toggleSidebar} />
+                {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
+              </div>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/gatepass"
+          element={
+            <PrivateRoute>
+              <div className="app-container">
+                <GatePass toggleSidebar={toggleSidebar} />
+                {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
+              </div>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/leaveform"
+          element={
+            <PrivateRoute>
+              <div className="app-container">
+                <LeaveForm toggleSidebar={toggleSidebar} />
+                {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
+              </div>
+            </PrivateRoute>
+          }
+        />
+        {/* Catch-all: redirect to dashboard or signin */}
+        <Route path="*" element={<Navigate to="/signin" replace />} />
       </Routes>
     </Router>
   );

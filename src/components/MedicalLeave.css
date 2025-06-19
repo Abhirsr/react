@@ -1,0 +1,72 @@
+.leave-content {
+  padding: 20px;
+  background: linear-gradient(to bottom right, #d0e6f7, #e3f2fd);
+  min-height: 100vh;
+  text-align: center;
+}
+
+.leave-content h2 {
+  margin-bottom: 25px;
+  color: #2c3e50;
+  font-size: 24px;
+}
+
+.leave-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.leave-form input,
+.leave-form textarea,
+.leave-form button,
+.leave-form label {
+  margin: 6px 0;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #b0bec5;
+  width: 80%;
+  max-width: 360px;
+  font-size: 14px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.leave-form textarea {
+  height: 90px;
+  resize: none;
+}
+
+.leave-form input[type="file"] {
+  padding: 5px;
+  border: none;
+}
+
+.preview-container {
+  margin-top: 10px;
+  text-align: left;
+  max-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.file-preview {
+  width: 100%;
+  margin-top: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.submit-btn {
+  background-color: #0077b6;
+  color: black;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #005f8a;
+}

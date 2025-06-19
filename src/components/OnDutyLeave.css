@@ -1,0 +1,61 @@
+.leave-content {
+  padding: 20px;
+  background: linear-gradient(to bottom, #edd1ef, #ffe0b3);
+  min-height: 100vh;
+  text-align: center;
+}
+
+.leave-content h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.leave-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.leave-form input,
+.leave-form textarea,
+.leave-form button,
+.leave-form label {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 80%;
+  max-width: 350px;
+  font-size: 14px;
+}
+.preview-container {
+  margin-top: 10px;
+}
+
+.file-preview {
+  width: 300px;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+
+.leave-form textarea {
+  height: 100px;
+  resize: none;
+}
+
+.leave-form input[type="file"] {
+  border: none;
+  padding: 0;
+}
+
+.submit-btn {
+  background-color: #0066cc;
+  color: #fff;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #004d99;
+}

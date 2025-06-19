@@ -9,141 +9,108 @@
   --shadow-medium: rgba(0, 0, 0, 0.12);
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f9;
+}
+
 .dashboard-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: #f8f8f8;
-  font-family: 'Roboto', 'Arial', sans-serif;
 }
 
 .dashboard-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--header-bg-color);
-  color: var(--primary-blue);
-  padding: 15px 30px;
-  height: 70px;
-  box-shadow: 0 2px 8px var(--shadow-light);
-  border-bottom: 1px solid #e0e0e0;
+  background-color: #003366;
+  color: white;
+  padding: 12px 20px;
+  height: 80px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
   position: sticky;
   top: 0;
   z-index: 1000;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .menu-btn {
-  font-size: 28px;
+  font-size: 26px;
   background: none;
   border: none;
-  color: var(--primary-blue);
+  color: white;
   cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
 }
 
 .menu-btn:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .header-title {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 }
 
 .dashboard-logo {
-  height: 50px;
+  height: 55px;
   width: auto;
-  flex-shrink: 0;
+  border-radius: 8px;
+  background-color: white;
+  padding: 4px;
 }
 
 .institution-names {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  color: var(--text-color);
+  align-items: flex-start;
+}
+
+.institution-names h3,
+.institution-names h2 {
+  margin: 0;
+  line-height: 1.3;
+  text-align: left;
+  color: white;
 }
 
 .institution-names h3 {
-  margin: 0;
   font-size: 15px;
-  line-height: 1.3;
-  text-align: center;
-  color: var(--light-text-color);
   font-weight: 400;
 }
 
 .institution-names h2 {
-  margin: 0;
   font-size: 19px;
   font-weight: 600;
-  text-align: center;
-  color: var(--primary-blue);
 }
 
+.logout-button {
+  padding: 8px 16px;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
 
-.welcome-text {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--light-text-color);
+.logout-button:hover {
+  background-color: #c62828;
 }
 
 .dashboard-content {
   flex-grow: 1;
-  padding: 30px;
+  padding: 40px;
+  margin: 25px;
   background-color: var(--white);
-  border-radius: 8px;
-  margin: 20px;
-  box-shadow: 0 4px 12px var(--shadow-medium);
-}
-
-@media (max-width: 768px) {
-  .dashboard-header {
-    padding: 10px 15px;
-    height: auto;
-    flex-wrap: wrap;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .header-title {
-    flex-direction: column;
-    margin: 10px 0;
-  }
-
-  .institution-names h3 {
-    font-size: 14px;
-  }
-
-  .institution-names h2 {
-    font-size: 17px;
-  }
-
-  .menu-btn {
-    order: -1;
-    margin-right: auto;
-  }
-
-  .welcome-text {
-    width: 100%;
-    text-align: center;
-    margin-top: 10px;
-  }
-
-  .dashboard-content {
-    margin: 10px;
-    padding: 15px;
-  }
-}
-
-@media (max-width: 480px) {
-  .dashboard-header {
-    flex-direction: column;
-    align-items: center;
-  }
-  .menu-btn {
-    margin-bottom: 10px;
-  }
+  border-radius: 12px;
+  box-shadow: 0 8px 20px var(--shadow-light);
 }

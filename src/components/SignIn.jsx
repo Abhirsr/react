@@ -1,28 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Signin.css';
 import logo from '../assets/logo.png';
 import { signin } from "../services/auth";
+import supabase from "../supabaseClient";
 
 const SignIn = () => {
   const navigate = useNavigate();
-
-  // State for form fields
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate('/dashboard', { replace: true });
+      }
+    };
+    checkSession();
+  }, [navigate]);
+
   const handleSignIn = async (e) => {
     e.preventDefault();
-
     try {
-      // Optional: add real sign-in logic here
       const result = await signin({ email, password });
-
       if (result?.error) {
         console.error("Sign-in failed:", result.error.message);
       } else {
-        // Navigate to dashboard if successful
-        navigate('/dashboard');
+        navigate('/dashboard', { replace: true }); // ✅ Prevent back to signin
       }
     } catch (err) {
       console.error("Unexpected error during sign-in:", err.message);

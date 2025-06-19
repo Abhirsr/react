@@ -1,18 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SignUp.css";
 import logo from "../assets/logo.png";
-import { Link } from "react-router-dom";
-import { signup } from "../services/auth"; // Assuming this is your signup function
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { signup } from "../services/auth";
+import supabase from "../supabaseClient";
 
 function SignUp() {
   const navigate = useNavigate();
-  // States for each input
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [regNumber, setRegNumber] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate("/dashboard", { replace: true });
+      }
+    };
+    checkSession();
+  }, [navigate]);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -21,7 +30,7 @@ function SignUp() {
       const { error } = await signup({ email, password, name, regNumber });
       if (!error) {
         alert("Registration successful! Please sign in.");
-        navigate("/signIn");
+        navigate("/signin", { replace: true });
       }
     } catch (error) {
       console.error("Signup error:", error.message);
