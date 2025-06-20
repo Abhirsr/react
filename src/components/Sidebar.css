@@ -39,11 +39,11 @@
 }
 
 .sidebar ul li:hover {
-  background-color: #f0f0f0;
+  background-color: lightblue;
 }
 
 .sidebar ul li.active {
-  background-color: #003366;
+  background-color: lightblue;
   color: white;
 }
 

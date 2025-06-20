@@ -15,6 +15,8 @@ import OnDutyLeave from "./components/OnDutyLeave";
 import MedicalLeave from "./components/MedicalLeave";
 import GatePass from "./components/GatePass";
 import LeaveForm from "./components/LeaveForm";
+import EmailVerified from "./components/EmailVerified"; // ✅ Import this new component
+import UpdatePassword from "./components/UpdatePassword";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -28,6 +30,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
+
+        {/* ✅ Verification success route */}
+        <Route path="/verify" element={<EmailVerified />} />
 
         <Route
           path="/dashboard"
@@ -64,6 +69,7 @@ const App = () => {
             </PrivateRoute>
           }
         />
+
         <Route
           path="/gatepass"
           element={
@@ -75,6 +81,7 @@ const App = () => {
             </PrivateRoute>
           }
         />
+
         <Route
           path="/leaveform"
           element={
@@ -86,7 +93,11 @@ const App = () => {
             </PrivateRoute>
           }
         />
+        {/* ✅ added Update Password route */}
+        <Route path="/update-password" element={<UpdatePassword />} />
+
         {/* Catch-all: redirect to dashboard or signin */}
+        {/* Catch-all route */}
         <Route path="*" element={<Navigate to="/signin" replace />} />
       </Routes>
     </Router>

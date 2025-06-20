@@ -91,3 +91,22 @@
   margin-top: 10px;
   color: #fff;
 }
+/* Forgot Password link */
+.forgot-password-link {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.forgot-btn {
+  background: none;
+  border: none;
+  color: #eff3f6;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: underline;
+  padding: 6px 0;
+}
+
+.forgot-btn:hover {
+  color: #03090e;
+}

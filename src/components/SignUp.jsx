@@ -15,7 +15,9 @@ function SignUp() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (session) {
         navigate("/dashboard", { replace: true });
       }
@@ -25,6 +27,12 @@ function SignUp() {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+
+    const allowedDomain = "@kanchiuniv.ac.in"; // ✅ Change to your domain
+    if (!email.endsWith(allowedDomain)) {
+      alert(`Only ${allowedDomain} emails are allowed.`);
+      return;
+    }
 
     try {
       const { error } = await signup({ email, password, name, regNumber });
