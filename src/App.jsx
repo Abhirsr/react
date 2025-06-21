@@ -18,6 +18,7 @@ import LeaveForm from "./components/LeaveForm";
 import EmailVerified from "./components/EmailVerified";
 import UpdatePassword from "./components/UpdatePassword";
 import OAuthCallback from "./components/OAuthCallback";
+import ProfilePage from "./components/ProfilePage";
 
 // ✅ Shared layout with Sidebar and toggle logic
 const ProtectedLayout = ({ children }) => {
@@ -102,6 +103,8 @@ const App = () => {
             </PrivateRoute>
           }
         />
+
+        <Route path="/profile" element={<ProfilePage />} />
 
         {/* Fallback route */}
         <Route path="*" element={<Navigate to="/signin" replace />} />

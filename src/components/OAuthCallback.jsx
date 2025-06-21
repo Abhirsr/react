@@ -20,6 +20,8 @@ const OAuthCallback = () => {
 
       const user = session.user;
       const email = user.email;
+      const name =
+        user.user_metadata.full_name || user.user_metadata.name || "Unnamed";
 
       const allowedDomain = "@kanchiuniv.ac.in";
       if (!email.endsWith(allowedDomain)) {
@@ -29,7 +31,27 @@ const OAuthCallback = () => {
         return;
       }
 
-      // ✅ Successfully authenticated & domain is allowed
+      // Auto-extract registration number from email prefix
+      const regNumber = email.split("@")[0];
+
+      // Upsert user info into the students table
+      const { error: insertError } = await supabase.from("profiles").upsert(
+        [
+          {
+            id: user.id, // must match auth.users.id due to FK
+            email,
+            name,
+            reg_number: regNumber,
+          },
+        ],
+        { onConflict: ["id"] }
+      );
+
+      if (insertError) {
+        console.error("Failed to insert student:", insertError);
+      }
+
+      // ✅ Authenticated and data synced
       navigate("/dashboard", { replace: true });
     };
 
