@@ -9,7 +9,7 @@ const SignIn = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [hasRequestedReset, setHasRequestedReset] = useState(false); // session-only
+  const [hasRequestedReset, setHasRequestedReset] = useState(false);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -60,7 +60,7 @@ const SignIn = () => {
       return;
     }
 
-    setHasRequestedReset(true); // disable for current session
+    setHasRequestedReset(true);
 
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -79,6 +79,26 @@ const SignIn = () => {
       setHasRequestedReset(false);
     }
   };
+
+  const handleGoogleSignIn = async () => {
+  try {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        // This should still point to your OAuthCallback route
+        redirectTo: "http://localhost:5173/oauth-callback",
+      },
+    });
+
+    if (error) {
+      alert("Google Sign-In failed");
+      console.error("Google SSO Error:", error.message);
+    }
+  } catch (err) {
+    console.error("Google SSO Exception:", err.message);
+    alert("Something went wrong with Google Sign-In.");
+  }
+};
 
   return (
     <div className="signin-wrapper">
@@ -114,10 +134,6 @@ const SignIn = () => {
             </button>
           </form>
 
-          <div className="signup-link">
-            Don't have an account? <Link to="/">Sign Up</Link>
-          </div>
-
           <div className="forgot-password-link">
             <button
               onClick={handleForgotPassword}
@@ -128,6 +144,16 @@ const SignIn = () => {
                 ? "Reset Link Sent (Refresh to request again)"
                 : "Forgot Password?"}
             </button>
+          </div>
+
+          <hr style={{ margin: "1rem 0" }} />
+
+          <button onClick={handleGoogleSignIn} className="google-btn">
+            Sign in with Google
+          </button>
+
+          <div className="signup-link">
+            Don’t have an account? <Link to="/">Sign Up</Link>
           </div>
         </div>
       </div>

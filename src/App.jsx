@@ -15,33 +15,46 @@ import OnDutyLeave from "./components/OnDutyLeave";
 import MedicalLeave from "./components/MedicalLeave";
 import GatePass from "./components/GatePass";
 import LeaveForm from "./components/LeaveForm";
-import EmailVerified from "./components/EmailVerified"; // ✅ Import this new component
+import EmailVerified from "./components/EmailVerified";
 import UpdatePassword from "./components/UpdatePassword";
+import OAuthCallback from "./components/OAuthCallback";
+
+// ✅ Shared layout with Sidebar and toggle logic
+const ProtectedLayout = ({ children }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+
+  // Pass toggleSidebar prop to the child component
+  const childWithProps = React.cloneElement(children, {
+    toggleSidebar,
+  });
+
+  return (
+    <div className="app-container">
+      <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
+      {childWithProps}
+    </div>
+  );
+};
 
 const App = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
   return (
     <Router>
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
-
-        {/* ✅ Verification success route */}
         <Route path="/verify" element={<EmailVerified />} />
+        <Route path="/update-password" element={<UpdatePassword />} />
+        <Route path="/oauth-callback" element={<OAuthCallback />} />
 
+        {/* Protected Routes */}
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
-              <div className="app-container">
-                <Dashboard toggleSidebar={toggleSidebar} />
-                {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
-              </div>
+              <ProtectedLayout>
+                <Dashboard />
+              </ProtectedLayout>
             </PrivateRoute>
           }
         />
@@ -50,10 +63,9 @@ const App = () => {
           path="/ondutyleave"
           element={
             <PrivateRoute>
-              <div className="app-container">
-                <OnDutyLeave toggleSidebar={toggleSidebar} />
-                {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
-              </div>
+              <ProtectedLayout>
+                <OnDutyLeave />
+              </ProtectedLayout>
             </PrivateRoute>
           }
         />
@@ -62,10 +74,9 @@ const App = () => {
           path="/medicalleave"
           element={
             <PrivateRoute>
-              <div className="app-container">
-                <MedicalLeave toggleSidebar={toggleSidebar} />
-                {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
-              </div>
+              <ProtectedLayout>
+                <MedicalLeave />
+              </ProtectedLayout>
             </PrivateRoute>
           }
         />
@@ -74,10 +85,9 @@ const App = () => {
           path="/gatepass"
           element={
             <PrivateRoute>
-              <div className="app-container">
-                <GatePass toggleSidebar={toggleSidebar} />
-                {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
-              </div>
+              <ProtectedLayout>
+                <GatePass />
+              </ProtectedLayout>
             </PrivateRoute>
           }
         />
@@ -86,18 +96,14 @@ const App = () => {
           path="/leaveform"
           element={
             <PrivateRoute>
-              <div className="app-container">
-                <LeaveForm toggleSidebar={toggleSidebar} />
-                {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
-              </div>
+              <ProtectedLayout>
+                <LeaveForm />
+              </ProtectedLayout>
             </PrivateRoute>
           }
         />
-        {/* ✅ added Update Password route */}
-        <Route path="/update-password" element={<UpdatePassword />} />
 
-        {/* Catch-all: redirect to dashboard or signin */}
-        {/* Catch-all route */}
+        {/* Fallback route */}
         <Route path="*" element={<Navigate to="/signin" replace />} />
       </Routes>
     </Router>

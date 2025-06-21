@@ -1,16 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from '../assets/logo.png';
 import './Dashboard.css';
 import { useNavigate } from 'react-router-dom';
+import supabase from '../supabaseClient';
 
 const Dashboard = ({ toggleSidebar, children }) => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     localStorage.clear();
     sessionStorage.clear();
     navigate('/signin');
   };
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+
+      if (error || !session) {
+        navigate('/signin');
+        return;
+      }
+
+      // Session is valid — continue showing dashboard
+    };
+
+    checkSession();
+  }, [navigate]);
 
   return (
     <div className="dashboard-container">
@@ -23,9 +43,7 @@ const Dashboard = ({ toggleSidebar, children }) => {
             <h2>Sri Chandrasekharendra Saraswathi Viswa Mahavidyalaya</h2>
           </div>
         </div>
-        <button onClick={handleLogout} className="logout-button">
-          Logout
-        </button>
+        <button onClick={handleLogout} className="logout-button">Logout</button>
       </header>
 
       <main className="dashboard-content">
