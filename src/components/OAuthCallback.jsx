@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import supabase from "../supabaseClient";
 
+// ✅ Domain restriction
+const ALLOWED_DOMAIN = "@kanchiuniv.ac.in";
+const isAllowedDomain = (email) => email.endsWith(ALLOWED_DOMAIN);
+
 const OAuthCallback = () => {
   useEffect(() => {
     const validateAndRedirect = async () => {
@@ -17,31 +21,41 @@ const OAuthCallback = () => {
 
       const user = session.user;
       const email = user.email;
-      const name =
-        user.user_metadata.full_name || user.user_metadata.name || "Unnamed";
-      const regNumber = email.split("@")[0];
 
-      const storedRole = localStorage.getItem("login_role");
-      const isStaff = storedRole === "staff";
+      // ✅ Block if not @kanchiuniv.ac.in
+      if (!isAllowedDomain(email)) {
+        alert(`Only ${ALLOWED_DOMAIN} emails are allowed.`);
+        await supabase.auth.signOut(); // Logout
+        window.location.replace("/signin");
+        return;
+      }
+
+      const name =
+        user.user_metadata?.full_name || user.user_metadata?.name || "Unnamed";
+      const regNumber = email.split("@")[0];
+      const userId = user.id;
+
+      console.log("OAuth user:", user);
 
       const { error: insertError } = await supabase.from("profiles").upsert(
-        [
-          {
-            id: user.id,
-            email,
-            name,
-            reg_number: regNumber,
-            role: isStaff ? "staff" : "student",
-          },
-        ],
+        {
+          id: userId,
+          email,
+          name,
+          reg_number: regNumber,
+        },
         { onConflict: ["id"] }
       );
 
       if (insertError) {
-        console.error("Failed to insert profile:", insertError);
+        console.error("❌ Failed to insert profile:", insertError);
+      } else {
+        console.log("✅ Profile inserted or updated");
       }
 
-      localStorage.removeItem("login_role"); // Clear stored role after redirect
+      const isStaff = localStorage.getItem("login_role") === "staff";
+      localStorage.removeItem("login_role");
+
       window.location.replace(isStaff ? "/staff-dashboard" : "/dashboard");
     };
 

@@ -39,12 +39,12 @@ const ProtectedLayout = ({ children }) => {
     </div>
   );
 };
-
+  
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<SignUp />} />
+        <Route path="/" element={<SignIn />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/verify" element={<EmailVerified />} />
         <Route path="/update-password" element={<UpdatePassword />} />

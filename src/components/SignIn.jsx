@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Signin.css";
 import logo from "../assets/logo.png";
 import supabase from "../supabaseClient";
+import googleIcon from "../assets/google.png";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ const SignIn = () => {
         <div className="signin-card">
           <div className="signin-header">
             <img src={logo} alt="Logo" className="logo-img" />
-            <h2>Sign In</h2>
+            <h2></h2>
           </div>
 
           <button
@@ -65,7 +66,7 @@ const SignIn = () => {
             className="google-btn enhanced-google-btn"
           >
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png"
+              src={googleIcon}
               alt="Google Logo"
               className="google-icon"
             />
