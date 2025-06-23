@@ -54,7 +54,7 @@ const GatePass = () => {
   };
 
   const handleLogout = () => {
-    navigate('/');
+    navigate('/',{replace:true});
   };
 
   return (

@@ -28,7 +28,7 @@ const LeaveForm = () => {
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
-    navigate('/signin');
+    navigate('/signin',{replace:true});
   };
 
   return (

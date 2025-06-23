@@ -42,3 +42,20 @@
 .requests-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
+.nested-request {
+  padding-left: 2rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.nested-request.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  font-weight: bold;
+}
+
+.dropdown-toggle {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

@@ -1,5 +1,4 @@
-import React from "react";
-import "./Sidebar.css";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   FaUserMd,
@@ -8,64 +7,126 @@ import {
   FaFileAlt,
   FaDoorOpen,
   FaInbox,
-  FaHome,
+  FaChevronDown,
+  FaChevronUp,
 } from "react-icons/fa";
 import defaultAvatar from "../assets/avatar.png";
 import avatar2 from "../assets/account.png";
+import "./Sidebar.css";
 
 const Sidebar = ({ onClose, isOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [requestsOpen, setRequestsOpen] = useState(false);
 
   const handleNavigation = (path) => {
-    navigate(path);
-    onClose();
+    navigate(path,{replace:true});
+    if (onClose) onClose();
   };
 
-  const menuItems = [
-    { name: "Medical Leave", path: "/medicalleave", icon: <FaUserMd /> },
-    { name: "On-duty Leave", path: "/ondutyleave", icon: <FaUserClock /> },
-    {
-      name: "Internship Permission",
-      path: "/internshippermission",
-      icon: <FaClipboardList />,
-    },
-    { name: "Leave Form", path: "/leaveform", icon: <FaFileAlt /> },
-    { name: "Gate-pass", path: "/gatepass", icon: <FaDoorOpen /> },
-    { name: "Requests", path: "/requests", icon: <FaInbox /> },
+  const requestCategories = [
+    { label: "All Requests", path: "/requests" },
+    { label: "Medical Leave", path: "/requests?type=medicalleave" },
+    { label: "On-duty Leave", path: "/requests?type=ondutyleave" },
+    { label: "Internship", path: "/requests?type=internship" },
+    { label: "Permission", path: "/requests?type=permission" },
+    { label: "Leave Form", path: "/requests?type=leaveform" },
+    { label: "Gate-pass", path: "/requests?type=gatepass" },
   ];
+
+  const isActiveRequest = (path) => {
+    const [pathname, query] = path.split("?");
+    return (
+      location.pathname === pathname &&
+      (query ? location.search === `?${query}` : location.search === "")
+    );
+  };
 
   return (
     <div className={`sidebar glass-panel ${isOpen ? "open" : "closed"}`}>
-      <div
-        className={`sidebar-header ${
-          location.pathname === "/dashboard" ? "active" : ""
-        }`}
-        onClick={() => handleNavigation("/dashboard")}
-        style={{ cursor: "pointer" }}
-      >
-        <img src={defaultAvatar} alt="User" className="avatar2" />
-        <div className="user-info">
-          <h3>Home</h3>
+      {/* Scrollable content */}
+      <div className="sidebar-scrollable">
+        <div
+          className={`sidebar-header ${
+            location.pathname === "/dashboard" ? "active" : ""
+          }`}
+          onClick={() => handleNavigation("/dashboard")}
+          style={{ cursor: "pointer" }}
+        >
+          <img src={defaultAvatar} alt="User" className="avatar2" />
+          <div className="user-info">
+            <h3>Home</h3>
+          </div>
         </div>
+
+        <ul className="nav-list">
+          <li
+            className={location.pathname === "/medicalleave" ? "active" : ""}
+            onClick={() => handleNavigation("/medicalleave")}
+          >
+            <FaUserMd />
+            <span className="text">Medical Leave</span>
+          </li>
+          <li
+            className={location.pathname === "/ondutyleave" ? "active" : ""}
+            onClick={() => handleNavigation("/ondutyleave")}
+          >
+            <FaUserClock />
+            <span className="text">On-duty Leave</span>
+          </li>
+          <li
+            className={
+              location.pathname === "/internshippermission" ? "active" : ""
+            }
+            onClick={() => handleNavigation("/internshippermission")}
+          >
+            <FaClipboardList />
+            <span className="text">Internship</span>
+          </li>
+          <li
+            className={location.pathname === "/leaveform" ? "active" : ""}
+            onClick={() => handleNavigation("/leaveform")}
+          >
+            <FaFileAlt />
+            <span className="text">Leave Form</span>
+          </li>
+          <li
+            className={location.pathname === "/gatepass" ? "active" : ""}
+            onClick={() => handleNavigation("/gatepass")}
+          >
+            <FaDoorOpen />
+            <span className="text">Gate-pass</span>
+          </li>
+
+          {/* Dropdown */}
+          <li
+            className="dropdown-toggle"
+            onClick={() => setRequestsOpen(!requestsOpen)}
+          >
+            <FaInbox />
+            <span className="text">Requests</span>
+            <span className="dropdown-icon">
+              {requestsOpen ? <FaChevronUp /> : <FaChevronDown />}
+            </span>
+          </li>
+          {requestsOpen &&
+            requestCategories.map((item) => (
+              <li
+                key={item.path}
+                className={`nested-request ${
+                  isActiveRequest(item.path) ? "active" : ""
+                }`}
+                onClick={() => handleNavigation(item.path)}
+              >
+                <span className="text">{item.label}</span>
+              </li>
+            ))}
+        </ul>
       </div>
 
-      <ul className="nav-list">
-        {menuItems.map(({ name, path, icon }, index) => (
-          <li
-            key={path}
-            className={location.pathname === path ? "active" : ""}
-            onClick={() => handleNavigation(path)}
-            style={{ animationDelay: `${0.1 * index}s` }}
-          >
-            <span className="icon">{icon}</span>
-            <span className="text">{name}</span>
-          </li>
-        ))}
-      </ul>
-
+      {/* Bottom profile button always visible */}
       <div className="bottom-area">
-        <div className="profile-button" onClick={() => navigate("/profile")}>
+        <div className="profile-button" onClick={() => navigate("/profile",{replace:true})}>
           <span className="profile-text">Profile</span>
           <img src={avatar2} alt="Profile" className="profile-icon" />
         </div>

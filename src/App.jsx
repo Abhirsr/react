@@ -23,6 +23,7 @@ import StaffDashboard from "./components/StaffDashboard";
 import DashboardHome from "./components/DashboardHome";
 import Request from "./pages/Request";
 
+
 // Shared layout with Sidebar and Header
 const ProtectedLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -45,6 +46,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Navigate to="/signin" replace />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
@@ -52,7 +54,7 @@ const App = () => {
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/oauth-callback" element={<OAuthCallback />} />
 
-        {/* Protected Routes */}
+        {/* Protected routes */}
         <Route
           path="/dashboard"
           element={
@@ -64,21 +66,21 @@ const App = () => {
           }
         />
         <Route
-          path="/ondutyleave"
-          element={
-            <PrivateRoute>
-              <ProtectedLayout>
-                <OnDutyLeave />
-              </ProtectedLayout>
-            </PrivateRoute>
-          }
-        />
-        <Route
           path="/medicalleave"
           element={
             <PrivateRoute>
               <ProtectedLayout>
                 <MedicalLeave />
+              </ProtectedLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/ondutyleave"
+          element={
+            <PrivateRoute>
+              <ProtectedLayout>
+                <OnDutyLeave />
               </ProtectedLayout>
             </PrivateRoute>
           }

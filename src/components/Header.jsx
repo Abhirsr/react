@@ -11,7 +11,7 @@ const Header = ({ toggleSidebar }) => {
     await supabase.auth.signOut();
     localStorage.clear();
     sessionStorage.clear();
-    navigate('/signin');
+    navigate('/signin',{replace:true});
   };
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const Header = ({ toggleSidebar }) => {
         error,
       } = await supabase.auth.getSession();
       if (error || !session) {
-        navigate('/signin');
+        navigate('/signin',{replace:true});
       }
     };
     checkSession();

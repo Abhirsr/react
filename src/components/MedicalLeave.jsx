@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import supabase from "../supabaseClient";
@@ -20,6 +20,19 @@ const MedicalLeave = () => {
 
   const [previewUrl, setPreviewUrl] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (data?.user?.email) {
+        setUserEmail(data.user.email);
+      } else {
+        console.error("Failed to get user email:", error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -37,6 +50,7 @@ const MedicalLeave = () => {
 
     try {
       let proofFileUrl = null;
+
       if (formData.proofFile) {
         const { publicUrl, error: uploadError } = await uploadMedicalCertificate(formData.proofFile);
         if (uploadError) {
@@ -48,7 +62,6 @@ const MedicalLeave = () => {
         proofFileUrl = publicUrl;
       }
 
-      // Insert into medical_leaves table
       const { error: insertError } = await supabase.from("medical_leaves").insert({
         name: formData.name,
         register_number: formData.register_number,
@@ -68,7 +81,6 @@ const MedicalLeave = () => {
         return;
       }
 
-      // Also insert into requests table
       const { error: requestError } = await supabase.from("requests").insert({
         name: formData.name,
         reg_no: formData.register_number,
@@ -77,6 +89,9 @@ const MedicalLeave = () => {
         from_date: formData.from_date,
         to_date: formData.to_date,
         submitted_at: new Date().toISOString(),
+        type: "medicalleave",
+        status: "Pending",
+        user_email: userEmail, // 👈 Filter key for request listing
       });
 
       if (requestError) {
@@ -86,7 +101,7 @@ const MedicalLeave = () => {
 
       localStorage.setItem("user_register_number", formData.register_number);
       alert("Medical leave submitted successfully!");
-      navigate("/requests");
+      navigate("/requests?type=medicalleave",{replace:true});
 
       // Reset form
       setFormData({
