@@ -8,7 +8,7 @@ import {
 
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
-import Header from "./components/Header"; // renamed from Dashboard
+import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import PrivateRoute from "./components/privateRoute";
 import OnDutyLeave from "./components/OnDutyLeave";
@@ -20,9 +20,10 @@ import UpdatePassword from "./components/UpdatePassword";
 import OAuthCallback from "./components/OAuthCallback";
 import ProfilePage from "./components/ProfilePage";
 import StaffDashboard from "./components/StaffDashboard";
-import DashboardHome from "./components/DashboardHome"; // ✅ New
+import DashboardHome from "./components/DashboardHome";
+import Request from "./pages/Request";
 
-// ✅ Shared layout with Sidebar and Header
+// Shared layout with Sidebar and Header
 const ProtectedLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
@@ -39,13 +40,14 @@ const ProtectedLayout = ({ children }) => {
     </div>
   );
 };
-  
+
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<SignIn />} />
+        <Route path="/" element={<Navigate to="/signin" replace />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/verify" element={<EmailVerified />} />
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/oauth-callback" element={<OAuthCallback />} />
@@ -117,6 +119,16 @@ const App = () => {
             <PrivateRoute>
               <ProtectedLayout>
                 <ProfilePage />
+              </ProtectedLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/requests"
+          element={
+            <PrivateRoute>
+              <ProtectedLayout>
+                <Request />
               </ProtectedLayout>
             </PrivateRoute>
           }

@@ -87,6 +87,8 @@ const OnDutyLeave = ({ toggleSidebar }) => {
 
     setSubmitting(false);
   };
+  
+
 
   const handleLogout = () => {
     localStorage.clear();
