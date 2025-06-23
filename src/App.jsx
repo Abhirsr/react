@@ -8,7 +8,7 @@ import {
 
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
-import Dashboard from "./components/Dashboard";
+import Header from "./components/Header"; // renamed from Dashboard
 import Sidebar from "./components/Sidebar";
 import PrivateRoute from "./components/privateRoute";
 import OnDutyLeave from "./components/OnDutyLeave";
@@ -19,21 +19,23 @@ import EmailVerified from "./components/EmailVerified";
 import UpdatePassword from "./components/UpdatePassword";
 import OAuthCallback from "./components/OAuthCallback";
 import ProfilePage from "./components/ProfilePage";
+import StaffDashboard from "./components/StaffDashboard";
+import DashboardHome from "./components/DashboardHome"; // ✅ New
 
-// ✅ Shared layout with Sidebar and toggle logic
+// ✅ Shared layout with Sidebar and Header
 const ProtectedLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
-  // Pass toggleSidebar prop to the child component
-  const childWithProps = React.cloneElement(children, {
-    toggleSidebar,
-  });
-
   return (
-    <div className="app-container">
+    <div className="app-container" style={{ display: "flex" }}>
       <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
-      {childWithProps}
+      <div style={{ flexGrow: 1 }}>
+        <Header toggleSidebar={toggleSidebar} />
+        <main className="dashboard-content" style={{ padding: "24px" }}>
+          {children}
+        </main>
+      </div>
     </div>
   );
 };
@@ -54,12 +56,11 @@ const App = () => {
           element={
             <PrivateRoute>
               <ProtectedLayout>
-                <Dashboard />
+                <DashboardHome />
               </ProtectedLayout>
             </PrivateRoute>
           }
         />
-
         <Route
           path="/ondutyleave"
           element={
@@ -70,7 +71,6 @@ const App = () => {
             </PrivateRoute>
           }
         />
-
         <Route
           path="/medicalleave"
           element={
@@ -81,7 +81,6 @@ const App = () => {
             </PrivateRoute>
           }
         />
-
         <Route
           path="/gatepass"
           element={
@@ -92,7 +91,6 @@ const App = () => {
             </PrivateRoute>
           }
         />
-
         <Route
           path="/leaveform"
           element={
@@ -103,10 +101,28 @@ const App = () => {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/staff-dashboard"
+          element={
+            <PrivateRoute>
+              <ProtectedLayout>
+                <StaffDashboard />
+              </ProtectedLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <ProtectedLayout>
+                <ProfilePage />
+              </ProtectedLayout>
+            </PrivateRoute>
+          }
+        />
 
-        <Route path="/profile" element={<ProfilePage />} />
-
-        {/* Fallback route */}
+        {/* Fallback */}
         <Route path="*" element={<Navigate to="/signin" replace />} />
       </Routes>
     </Router>

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import logo from '../assets/logo.png';
-import './Dashboard.css';
+import './Header.css';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../supabaseClient';
 
-const Dashboard = ({ toggleSidebar, children }) => {
+const StaffDashboard = ({ toggleSidebar, children }) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -26,7 +26,13 @@ const Dashboard = ({ toggleSidebar, children }) => {
         return;
       }
 
-      // Session is valid — continue showing dashboard
+      const email = session.user.email;
+      const reg = email.split("@")[0];
+      const isStaff = reg.toLowerCase().startsWith("staff");
+
+      if (!isStaff) {
+        navigate('/dashboard');
+      }
     };
 
     checkSession();
@@ -39,18 +45,18 @@ const Dashboard = ({ toggleSidebar, children }) => {
         <div className="header-title">
           <img src={logo} alt="Logo" className="dashboard-logo" />
           <div className="institution-names">
-            <h3>श्रीचन्द्रशेखरेन्द्रसरस्वतीविश्वमहाविद्यालयः</h3>
-            <h2>Sri Chandrasekharendra Saraswathi Viswa Mahavidyalaya</h2>
+            <h3>Staff Panel</h3>
+            <h2>SCSVMV - Faculty Dashboard</h2>
           </div>
         </div>
         <button onClick={handleLogout} className="logout-button">Logout</button>
       </header>
 
       <main className="dashboard-content">
-        {children}
+        {children || <p>Welcome, Staff Member! You can view requests, approve/deny, and more.</p>}
       </main>
     </div>
   );
 };
 
-export default Dashboard;
+export default StaffDashboard;

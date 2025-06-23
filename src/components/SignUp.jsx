@@ -18,17 +18,28 @@ function SignUp() {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      if (session) {
-        navigate("/dashboard", { replace: true });
+
+      if (session?.user) {
+        const userEmail = session.user.email;
+        const reg = userEmail.split("@")[0];
+        const isStaff = reg.toLowerCase().startsWith("staff");
+
+        // 🔁 Redirect based on role
+        if (isStaff) {
+          window.location.replace("/staff-dashboard");
+        } else {
+          window.location.replace("/dashboard");
+        }
       }
     };
+
     checkSession();
-  }, [navigate]);
+  }, []);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-    const allowedDomain = "@kanchiuniv.ac.in"; // ✅ Change to your domain
+    const allowedDomain = "@kanchiuniv.ac.in";
     if (!email.endsWith(allowedDomain)) {
       alert(`Only ${allowedDomain} emails are allowed.`);
       return;
@@ -38,7 +49,7 @@ function SignUp() {
       const { error } = await signup({ email, password, name, regNumber });
       if (!error) {
         alert("Registration successful! Please sign in.");
-        navigate("/signin", { replace: true });
+        window.location.replace("/signin"); // 🔁 replaces instead of push
       }
     } catch (error) {
       console.error("Signup error:", error.message);

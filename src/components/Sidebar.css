@@ -219,3 +219,8 @@
   font-weight: 500;
   margin-right: 10px;
 }
+.sidebar-header.active {
+  background-color: rgba(30, 144, 255, 0.4);
+  border-radius: 10px;
+  padding: 8px;
+}

@@ -58,19 +58,6 @@ const GatePass = () => {
   };
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <button className="menu-btn" onClick={() => navigate('/Sidebar')}>☰</button>
-        <div className="header-title">
-          <img src={logo} alt="Logo" className="dashboard-logo" />
-          <div className="institution-names">
-            <h3>श्रीचन्द्रशेखरेन्द्रसरस्वतीविश्वमहाविद्यालयः</h3>
-            <h2>Sri Chandrasekharendra Saraswathi Viswa Mahavidyalaya</h2>
-          </div>
-        </div>
-        <button className="logout-btn" onClick={handleLogout}>Logout</button>
-      </header>
-
       <div className="gatepass-content">
         <h2>GATE - PASS FORM</h2>
         <form className="gatepass-form" onSubmit={handleSubmit}>
@@ -103,7 +90,6 @@ const GatePass = () => {
           <button type="submit" className="submit-btn">SUBMIT</button>
         </form>
       </div>
-    </div>
   );
 };
 

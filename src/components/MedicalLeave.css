@@ -1,72 +1,127 @@
-.leave-content {
-  padding: 20px;
-  background: linear-gradient(to bottom right, #d0e6f7, #e3f2fd);
-  min-height: 100vh;
-  text-align: center;
+body {
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #8aa5b4; /* sky blue */
 }
 
-.leave-content h2 {
-  margin-bottom: 25px;
-  color: #2c3e50;
-  font-size: 24px;
+.dashboard-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #004b8d;
+  color: white;
+  padding: 10px 20px;
+}
+
+.menu-btn,
+.logout-btn {
+  background-color: white;
+  color: #004b8d;
+  border: none;
+  padding: 8px 12px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.dashboard-logo {
+  height: 50px;
+}
+
+.institution-names h2,
+.institution-names h3 {
+  margin: 0;
+  text-align: left;
+}
+
+.leave-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0;
+  background-color: #2089c1;
+}
+
+.form-container {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
 }
 
 .leave-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  gap: 15px;
 }
 
 .leave-form input,
-.leave-form textarea,
-.leave-form button,
-.leave-form label {
-  margin: 6px 0;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #b0bec5;
-  width: 80%;
-  max-width: 360px;
-  font-size: 14px;
-  background-color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+.leave-form button {
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-.leave-form textarea {
-  height: 90px;
-  resize: none;
+.leave-form input::placeholder {
+  color: #888;
 }
 
 .leave-form input[type="file"] {
-  padding: 5px;
+  padding: 6px;
   border: none;
 }
 
 .preview-container {
   margin-top: 10px;
-  text-align: left;
-  max-width: 360px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .file-preview {
   width: 100%;
-  margin-top: 8px;
+  max-width: 300px;
+  margin-top: 5px;
   border-radius: 5px;
-  border: 1px solid #ccc;
 }
 
 .submit-btn {
   background-color: #0077b6;
-  color: black;
-  border: none;
-  cursor: pointer;
+  color: white;
   font-weight: bold;
-  transition: background-color 0.3s ease;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: none;
 }
 
 .submit-btn:hover {
   background-color: #005f8a;
+}
+
+.date-fields {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  margin-bottom: 10px;
+  justify-content: space-between;
+}
+
+.date-fields .date-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
 }

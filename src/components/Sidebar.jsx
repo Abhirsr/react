@@ -8,9 +8,10 @@ import {
   FaFileAlt,
   FaDoorOpen,
   FaInbox,
+  FaHome,
 } from "react-icons/fa";
 import defaultAvatar from "../assets/avatar.png";
-import avatar2 from "../assets/account.png"
+import avatar2 from "../assets/account.png";
 
 const Sidebar = ({ onClose, isOpen }) => {
   const navigate = useNavigate();
@@ -24,15 +25,25 @@ const Sidebar = ({ onClose, isOpen }) => {
   const menuItems = [
     { name: "Medical Leave", path: "/medicalleave", icon: <FaUserMd /> },
     { name: "On-duty Leave", path: "/ondutyleave", icon: <FaUserClock /> },
-    { name: "Internship Permission", path: "/internshippermission", icon: <FaClipboardList /> },
+    {
+      name: "Internship Permission",
+      path: "/internshippermission",
+      icon: <FaClipboardList />,
+    },
     { name: "Leave Form", path: "/leaveform", icon: <FaFileAlt /> },
     { name: "Gate-pass", path: "/gatepass", icon: <FaDoorOpen /> },
     { name: "Requests", path: "/requests", icon: <FaInbox /> },
   ];
 
   return (
-    <div className={`sidebar glass-panel ${isOpen ? 'open' : 'closed'}`}>
-      <div className="sidebar-header">
+    <div className={`sidebar glass-panel ${isOpen ? "open" : "closed"}`}>
+      <div
+        className={`sidebar-header ${
+          location.pathname === "/dashboard" ? "active" : ""
+        }`}
+        onClick={() => handleNavigation("/dashboard")}
+        style={{ cursor: "pointer" }}
+      >
         <img src={defaultAvatar} alt="User" className="avatar2" />
         <div className="user-info">
           <h3>Home</h3>

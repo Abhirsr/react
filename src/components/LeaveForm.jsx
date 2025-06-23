@@ -32,19 +32,6 @@ const LeaveForm = () => {
   };
 
   return (
-    <div className="leave-form-page">
-      <header className="dashboard-header">
-        <button className="menu-btn" onClick={() => navigate('/dashboard')}>☰</button>
-        <div className="header-title">
-          <img src={logo} alt="Logo" className="dashboard-logo" />
-          <div className="institution-names">
-            <h3>श्रीचन्द्रशेखरेन्द्रसरस्वतीविश्वमहाविद्यालयः</h3>
-            <h2>Sri Chandrasekharendra Saraswathi Viswa Mahavidyalaya</h2>
-          </div>
-        </div>
-        <button className="logout-btn" onClick={handleLogout}>Logout</button>
-      </header>
-
       <main className="leave-content">
         <h2>Leave Application Form</h2>
         <form onSubmit={handleSubmit} className="leave-form">
@@ -91,7 +78,6 @@ const LeaveForm = () => {
           <button type="submit" className="submit-btn">Submit</button>
         </form>
       </main>
-    </div>
   );
 };
 
