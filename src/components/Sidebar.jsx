@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   FaUserMd,
@@ -10,19 +10,44 @@ import {
   FaChevronDown,
   FaChevronUp,
 } from "react-icons/fa";
+import supabase from "../supabaseClient";
 import defaultAvatar from "../assets/avatar.png";
-import avatar2 from "../assets/account.png";
 import "./Sidebar.css";
 
 const Sidebar = ({ onClose, isOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [requestsOpen, setRequestsOpen] = useState(false);
+  const [profileImage, setProfileImage] = useState(""); // added state
 
   const handleNavigation = (path) => {
-    navigate(path,{replace:true});
+    navigate(path, { replace: true });
     if (onClose) onClose();
   };
+
+  // 📌 Fetch profile image from Supabase
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+
+      if (error || !user) return;
+
+      const { data, error: profileError } = await supabase
+        .from("profiles")
+        .select("profile_url")
+        .eq("id", user.id)
+        .single();
+
+      if (!profileError && data?.profile_url) {
+        setProfileImage(data.profile_url);
+      }
+    };
+
+    fetchProfileImage();
+  }, []);
 
   const requestCategories = [
     { label: "All Requests", path: "/requests" },
@@ -124,11 +149,18 @@ const Sidebar = ({ onClose, isOpen }) => {
         </ul>
       </div>
 
-      {/* Bottom profile button always visible */}
+      {/* Bottom profile button */}
       <div className="bottom-area">
-        <div className="profile-button" onClick={() => navigate("/profile",{replace:true})}>
+        <div
+          className="profile-button"
+          onClick={() => navigate("/profile", { replace: true })}
+        >
           <span className="profile-text">Profile</span>
-          <img src={avatar2} alt="Profile" className="profile-icon" />
+          <img
+            src={profileImage || defaultAvatar}
+            alt="Profile"
+            className="profile-icon"
+          />
         </div>
       </div>
     </div>
