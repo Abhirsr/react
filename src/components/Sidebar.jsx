@@ -18,21 +18,14 @@ const Sidebar = ({ onClose, isOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [requestsOpen, setRequestsOpen] = useState(false);
-  const [profileImage, setProfileImage] = useState(""); // added state
+  const [profileImage, setProfileImage] = useState("");
 
-  const handleNavigation = (path) => {
-    navigate(path, { replace: true });
-    if (onClose) onClose();
-  };
-
-  // 📌 Fetch profile image from Supabase
   useEffect(() => {
     const fetchProfileImage = async () => {
       const {
         data: { user },
         error,
       } = await supabase.auth.getUser();
-
       if (error || !user) return;
 
       const { data, error: profileError } = await supabase
@@ -49,12 +42,16 @@ const Sidebar = ({ onClose, isOpen }) => {
     fetchProfileImage();
   }, []);
 
+  const handleNavigation = (path) => {
+    navigate(path, { replace: true });
+    if (onClose) onClose(); // Close sidebar on mobile
+  };
+
   const requestCategories = [
     { label: "All Requests", path: "/requests" },
     { label: "Medical Leave", path: "/requests?type=medicalleave" },
     { label: "On-duty Leave", path: "/requests?type=ondutyleave" },
-    { label: "Internship", path: "/requests?type=internship" },
-    { label: "Permission", path: "/requests?type=permission" },
+    { label: "Internship Permission", path: "/requests?type=internship" },
     { label: "Leave Form", path: "/requests?type=leaveform" },
     { label: "Gate-pass", path: "/requests?type=gatepass" },
   ];
@@ -69,7 +66,6 @@ const Sidebar = ({ onClose, isOpen }) => {
 
   return (
     <div className={`sidebar glass-panel ${isOpen ? "open" : "closed"}`}>
-      {/* Scrollable content */}
       <div className="sidebar-scrollable">
         <div
           className={`sidebar-header ${
@@ -77,63 +73,76 @@ const Sidebar = ({ onClose, isOpen }) => {
           }`}
           onClick={() => handleNavigation("/dashboard")}
           style={{ cursor: "pointer" }}
+          title="Home"
         >
           <img src={defaultAvatar} alt="User" className="avatar2" />
-          <div className="user-info">
-            <h3>Home</h3>
-          </div>
+          {isOpen && (
+            <div className="user-info">
+              <h3>Home</h3>
+            </div>
+          )}
         </div>
 
         <ul className="nav-list">
           <li
             className={location.pathname === "/medicalleave" ? "active" : ""}
             onClick={() => handleNavigation("/medicalleave")}
+            title="Medical Leave"
           >
             <FaUserMd />
-            <span className="text">Medical Leave</span>
+            {isOpen && <span className="text">Medical Leave</span>}
           </li>
           <li
             className={location.pathname === "/ondutyleave" ? "active" : ""}
             onClick={() => handleNavigation("/ondutyleave")}
+            title="On-duty Leave"
           >
             <FaUserClock />
-            <span className="text">On-duty Leave</span>
+            {isOpen && <span className="text">On-duty Leave</span>}
           </li>
           <li
             className={
               location.pathname === "/internshippermission" ? "active" : ""
             }
             onClick={() => handleNavigation("/internshippermission")}
+            title="Internship"
           >
             <FaClipboardList />
-            <span className="text">Internship</span>
+            {isOpen && <span className="text">Internship</span>}
           </li>
           <li
             className={location.pathname === "/leaveform" ? "active" : ""}
             onClick={() => handleNavigation("/leaveform")}
+            title="Leave Form"
           >
             <FaFileAlt />
-            <span className="text">Leave Form</span>
+            {isOpen && <span className="text">Leave Form</span>}
           </li>
           <li
             className={location.pathname === "/gatepass" ? "active" : ""}
             onClick={() => handleNavigation("/gatepass")}
+            title="Gate-pass"
           >
             <FaDoorOpen />
-            <span className="text">Gate-pass</span>
+            {isOpen && <span className="text">Gate-pass</span>}
           </li>
 
-          {/* Dropdown */}
           <li
             className="dropdown-toggle"
             onClick={() => setRequestsOpen(!requestsOpen)}
+            title="Requests"
           >
             <FaInbox />
-            <span className="text">Requests</span>
-            <span className="dropdown-icon">
-              {requestsOpen ? <FaChevronUp /> : <FaChevronDown />}
-            </span>
+            {isOpen && (
+              <>
+                <span className="text">Requests</span>
+                <span className="dropdown-icon">
+                  {requestsOpen ? <FaChevronUp /> : <FaChevronDown />}
+                </span>
+              </>
+            )}
           </li>
+
           {requestsOpen &&
             requestCategories.map((item) => (
               <li
@@ -142,20 +151,21 @@ const Sidebar = ({ onClose, isOpen }) => {
                   isActiveRequest(item.path) ? "active" : ""
                 }`}
                 onClick={() => handleNavigation(item.path)}
+                title={item.label}
               >
-                <span className="text">{item.label}</span>
+                {isOpen && <span className="text">{item.label}</span>}
               </li>
             ))}
         </ul>
       </div>
 
-      {/* Bottom profile button */}
       <div className="bottom-area">
         <div
           className="profile-button"
-          onClick={() => navigate("/profile", { replace: true })}
+          onClick={() => handleNavigation("/profile")}
+          title="Profile"
         >
-          <span className="profile-text">Profile</span>
+          {isOpen && <span className="profile-text">Profile</span>}
           <img
             src={profileImage || defaultAvatar}
             alt="Profile"

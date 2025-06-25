@@ -22,7 +22,8 @@ import ProfilePage from "./components/ProfilePage";
 import StaffDashboard from "./components/StaffDashboard";
 import DashboardHome from "./components/DashboardHome";
 import Request from "./pages/Request";
-
+import ParticlesBackground from "./components/ParticleBackground";
+import InternshipForm from "./components/internship";
 
 // Shared layout with Sidebar and Header
 const ProtectedLayout = ({ children }) => {
@@ -131,6 +132,16 @@ const App = () => {
             <PrivateRoute>
               <ProtectedLayout>
                 <Request />
+              </ProtectedLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/internshippermission"
+          element={
+            <PrivateRoute>
+              <ProtectedLayout>
+                <InternshipForm />
               </ProtectedLayout>
             </PrivateRoute>
           }

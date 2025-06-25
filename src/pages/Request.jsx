@@ -3,6 +3,22 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import supabase from '../supabaseClient';
 import './Request.css';
 
+const TABLE_MAP = {
+  medicalleave: 'requests',
+  ondutyleave: 'odrequests',
+  internship: 'staffinternshiprequests',
+  leaveform: 'leave_requests',
+  gatepass: 'gatepass_requests',
+};
+
+const REASON_MAP = {
+  medicalleave: 'Medical Leave',
+  ondutyleave: 'On-Duty Leave',
+  internship: 'Internship Permission',
+  leaveform: 'Leave Form',
+  gatepass: 'Gate Pass',
+};
+
 const Request = () => {
   const [leaveRequests, setLeaveRequests] = useState([]);
   const [userEmail, setUserEmail] = useState('');
@@ -30,51 +46,33 @@ const Request = () => {
   };
 
   const fetchRequests = async () => {
-    let request = supabase.from('requests').select('*');
-
-    if (type) {
-      request = request.eq('reason', convertTypeToReason(type));
+    const table = TABLE_MAP[type];
+    if (!table) {
+      console.error('Invalid request type or missing table mapping');
+      return;
     }
 
-    request = request.eq('user_email', userEmail); // 👈 filter by logged-in user
+    let request = supabase.from(table).select('*');
+
+    // filter by logged-in user
+    request = request.eq('user_email', userEmail);
 
     const { data, error } = await request.order('submitted_at', {
       ascending: false,
     });
 
     if (error) {
-      console.error('Fetch Error:', error);
+      console.error(`Fetch Error from ${table}:`, error);
     } else {
       setLeaveRequests(data);
     }
   };
 
-  const convertTypeToReason = (type) => {
-    switch (type) {
-      case 'medicalleave':
-        return 'Medical Leave';
-      case 'ondutyleave':
-        return 'On-Duty Leave';
-      case 'internship':
-        return 'Internship Permission';
-      case 'leaveform':
-        return 'Leave Form';
-      case 'gatepass':
-        return 'Gate Pass';
-      case 'permission':
-        return 'Permission';
-      default:
-        return '';
-    }
-  };
-
-  const readableType = convertTypeToReason(type);
+  const readableType = REASON_MAP[type] || 'Leave';
 
   return (
     <main className="requests-content">
-      <h2>
-        {type ? `${readableType} Requests` : 'All Leave Requests'}
-      </h2>
+      <h2>{type ? `${readableType} Requests` : 'All Leave Requests'}</h2>
       <table className="requests-table">
         <thead>
           <tr>
@@ -95,7 +93,7 @@ const Request = () => {
                 <td>{req.name}</td>
                 <td>{req.reg_no}</td>
                 <td>{req.faculty_email}</td>
-                <td>{req.reason}</td>
+                <td>{req.reason || readableType}</td>
                 <td>{req.from_date}</td>
                 <td>{req.to_date}</td>
                 <td>{req.status || 'Pending'}</td>

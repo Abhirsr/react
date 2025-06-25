@@ -1,0 +1,31 @@
+.dashboard-container {
+  display: flex;
+}
+
+.main-content {
+  flex-grow: 1;
+}
+
+.main-content.shifted {
+  margin-left: 250px; /* same as sidebar open width */
+}
+
+.main-content.collapsed {
+  margin-left: 70px; /* same as sidebar collapsed width */
+}
+
+.dashboard-header {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  background-color: #00509d;
+  color: white;
+  z-index: 1;
+}
+
+.dashboard-body {
+  margin-top: 80px; /* below fixed header */
+  padding: 20px;
+  background: #cfefff;
+  min-height: calc(100vh - 80px);
+}
