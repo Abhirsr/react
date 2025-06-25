@@ -1,17 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from '../assets/logo.png';
-import './Header.css'; // Can rename to Header.css later
+import './Header.css';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../supabaseClient';
+import { Bell } from 'lucide-react';
 
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [hasUnread, setHasUnread] = useState(false);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     localStorage.clear();
     sessionStorage.clear();
-    navigate('/signin',{replace:true});
+    navigate('/signin', { replace: true });
   };
 
   useEffect(() => {
@@ -21,11 +25,28 @@ const Header = ({ toggleSidebar }) => {
         error,
       } = await supabase.auth.getSession();
       if (error || !session) {
-        navigate('/signin',{replace:true});
+        navigate('/signin', { replace: true });
       }
     };
     checkSession();
+
+    // Load notifications
+    const savedNotifications = JSON.parse(localStorage.getItem("notifications")) || [];
+    const unread = localStorage.getItem("hasUnreadNotifications") === "true";
+
+    setNotifications(savedNotifications);
+    setHasUnread(unread);
   }, [navigate]);
+
+  const toggleNotifications = () => {
+    setShowNotifications((prev) => !prev);
+
+    // Mark as read when popup opens
+    if (!showNotifications) {
+      setHasUnread(false);
+      localStorage.setItem("hasUnreadNotifications", "false");
+    }
+  };
 
   return (
     <header className="dashboard-header">
@@ -37,7 +58,25 @@ const Header = ({ toggleSidebar }) => {
           <h2>Sri Chandrasekharendra Saraswathi Viswa Mahavidyalaya</h2>
         </div>
       </div>
-      <button onClick={handleLogout} className="logout-button">Logout</button>
+
+      <div className="header-right">
+        <div className="notification-wrapper" onClick={toggleNotifications}>
+          <Bell className="notification-icon" />
+          {hasUnread && <span className="notification-dot" />}
+          {showNotifications && (
+            <div className="notification-popup">
+              {notifications.length > 0 ? (
+                notifications.map((note) => (
+                  <p key={note.id}>{note.message}</p>
+                ))
+              ) : (
+                <p>No notifications</p>
+              )}
+            </div>
+          )}
+        </div>
+        <button onClick={handleLogout} className="logout-button">Logout</button>
+      </div>
     </header>
   );
 };

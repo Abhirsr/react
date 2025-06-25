@@ -83,6 +83,15 @@ const GatePass = () => {
       }
 
       alert("✅ Gate Pass Submitted!");
+      // 🔔 Save notification in localStorage
+const existingNotifications = JSON.parse(localStorage.getItem("notifications")) || [];
+const newNotification = {
+  id: Date.now(),
+  message: "✅ Gate pass submitted!",
+};
+const updatedNotifications = [newNotification, ...existingNotifications];
+localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+localStorage.setItem("hasUnreadNotifications", "true");
       navigate("/requests?type=gatepass", { replace: true });
 
       setFormData({

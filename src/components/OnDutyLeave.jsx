@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import supabase from '../supabaseClient';
 import { uploadProofFile } from '../api/UploadProof';
 import './OnDutyLeave.css';
-
 const OnDutyLeave = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({

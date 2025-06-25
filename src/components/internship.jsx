@@ -41,6 +41,7 @@ const InternshipForm = () => {
 
     try {
       let offerLetterUrl = null;
+
       if (formData.offerLetter) {
         const { publicUrl, error: uploadError } =
           await uploadInternshipOfferLetter(formData.offerLetter);
@@ -52,6 +53,19 @@ const InternshipForm = () => {
         }
         offerLetterUrl = publicUrl;
       }
+
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user?.email) {
+        alert("User not logged in.");
+        setSubmitting(false);
+        return;
+      }
+
+      const userEmail = user.email;
 
       const { error: insertError } = await supabase
         .from("internship_applications")
@@ -66,6 +80,7 @@ const InternshipForm = () => {
           end_date: formData.end_date,
           offer_letter_url: offerLetterUrl,
           created_at: new Date().toISOString(),
+          user_email: userEmail,
         });
 
       if (insertError) {
@@ -75,27 +90,36 @@ const InternshipForm = () => {
         return;
       }
 
-      // 👇 Insert into `requests` table
-      const user = await supabase.auth.getUser();
-      const userEmail = user?.data?.user?.email || "";
-
-      const { error: requestError } = await supabase.from("staffinternshiprequests").insert({
-        name: formData.name,
-        reg_no: formData.register_number,
-        faculty_email: formData.incharge_mail,
-        reason: "Internship",
-        from_date: formData.start_date,
-        to_date: formData.end_date,
-        submitted_at: new Date().toISOString(),
-        type: "internship",
-        status: "Pending",
-        user_email: userEmail,
-      });
+      const { error: requestError } = await supabase
+        .from("staffinternshiprequests")
+        .insert({
+          name: formData.name,
+          reg_no: formData.register_number,
+          faculty_email: formData.incharge_mail,
+          reason: "Internship",
+          from_date: formData.start_date,
+          to_date: formData.end_date,
+          submitted_at: new Date().toISOString(),
+          type: "internship",
+          status: "Pending",
+          user_email: userEmail,
+        });
 
       if (requestError) {
         console.error("Requests table insert error:", requestError);
         alert("Failed to record internship in requests.");
       }
+
+      // 🔔 Bell Notification
+      const existingNotifications =
+        JSON.parse(localStorage.getItem("notifications")) || [];
+      const newNotification = {
+        id: Date.now(),
+        message: "✅ Internship request submitted!",
+      };
+      const updatedNotifications = [newNotification, ...existingNotifications];
+      localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+      localStorage.setItem("hasUnreadNotifications", "true");
 
       alert("Internship application submitted successfully!");
       setFormData({
@@ -118,12 +142,6 @@ const InternshipForm = () => {
     }
 
     setSubmitting(false);
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    sessionStorage.clear();
-    navigate("/signin");
   };
 
   return (
@@ -186,7 +204,10 @@ const InternshipForm = () => {
                 value={startDate ? dayjs(startDate) : null}
                 onChange={(date, dateString) => {
                   setStartDate(dateString);
-                  setFormData((prev) => ({ ...prev, start_date: dateString }));
+                  setFormData((prev) => ({
+                    ...prev,
+                    start_date: dateString,
+                  }));
                 }}
                 placeholder="Start Date"
                 style={{ width: "100%" }}
@@ -199,7 +220,10 @@ const InternshipForm = () => {
                 value={endDate ? dayjs(endDate) : null}
                 onChange={(date, dateString) => {
                   setEndDate(dateString);
-                  setFormData((prev) => ({ ...prev, end_date: dateString }));
+                  setFormData((prev) => ({
+                    ...prev,
+                    end_date: dateString,
+                  }));
                 }}
                 placeholder="End Date"
                 style={{ width: "100%" }}

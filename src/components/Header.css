@@ -131,5 +131,53 @@ body {
 
 .student-card p {
   margin: 0.5rem 0;
-  font-size: 1rem;
+  font-
+  .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+}
+
+.notification-wrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.notification-icon {
+  color: white; /* match header bg */
+  height: 24px;
+  width: 24px;
+}
+
+.notification-popup {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  background-color: #ffffff;
+  color: #333;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  z-index: 100;
+  min-width: 180px;
+}
+.notification-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  height: 10px;
+  width: 10px;
+  background-color: red;
+  border-radius: 50%;
+  border: 2px solid white;
+  z-index: 10;
 }

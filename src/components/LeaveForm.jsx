@@ -91,6 +91,15 @@ const Leave = () => {
 
       localStorage.setItem("user_register_number", formData.register_number);
       alert("Leave Form submitted successfully!");
+      // 🔔 Save notification in localStorage
+const existingNotifications = JSON.parse(localStorage.getItem("notifications")) || [];
+const newNotification = {
+  id: Date.now(),
+  message: "✅ Leave request submitted!",
+};
+const updatedNotifications = [newNotification, ...existingNotifications];
+localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+localStorage.setItem("hasUnreadNotifications", "true");
       setFormData({
         name: "",
         register_number: "",
