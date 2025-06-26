@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   FaUserMd,
@@ -7,8 +7,9 @@ import {
   FaFileAlt,
   FaDoorOpen,
   FaInbox,
-  FaChevronDown,
   FaChevronUp,
+  FaChevronDown,
+  FaHome, // 👈 add this line right here
 } from "react-icons/fa";
 import supabase from "../supabaseClient";
 import defaultAvatar from "../assets/avatar.png";
@@ -71,16 +72,18 @@ const Sidebar = ({ onClose, isOpen }) => {
             location.pathname === "/dashboard" ? "active" : ""
           }`}
           onClick={() => handleNavigation("/dashboard")}
-          style={{ cursor: "pointer" }}
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            padding: "12px 16px",
+          }}
           title="Home"
         >
-          {isOpen && (
-            <div className="user-info">
-              <h3><img src={defaultAvatar} alt="User" className="avatar2" />Home</h3>
-            </div>
-          )}
+          <FaHome size={20} color="#000" />
+          {isOpen && <span className="text">Home</span>}
         </div>
-
         <ul className="nav-list">
           <li
             className={location.pathname === "/medicalleave" ? "active" : ""}

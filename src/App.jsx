@@ -19,11 +19,15 @@ import EmailVerified from "./components/EmailVerified";
 import UpdatePassword from "./components/UpdatePassword";
 import OAuthCallback from "./components/OAuthCallback";
 import ProfilePage from "./components/ProfilePage";
-import StaffDashboard from "./components/StaffDashboard";
 import DashboardHome from "./components/DashboardHome";
 import Request from "./pages/Request";
 import ParticlesBackground from "./components/ParticleBackground";
 import InternshipForm from "./components/internship";
+import StaffSidebar from "./components/StaffSidebar";
+import StaffDashboard from "./components/StaffDashboard";
+import StaffLayout from "./components/StaffLayout";
+import StaffOndutyRequests from "./components/StaffOnDutyRequests";
+import StaffMedicalRequests from "./components/StaffMedicalRequest";
 
 // Shared layout with Sidebar and Header
 const ProtectedLayout = ({ children }) => {
@@ -87,6 +91,24 @@ const App = () => {
           }
         />
         <Route
+          path="/staff-dashboard"
+          element={
+            <PrivateRoute>
+              <StaffLayout />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/staff-profile"
+          element={
+            <StaffLayout>
+              <div style={{ padding: "24px" }}>
+                <h2>Staff Profile (Coming Soon)</h2>
+              </div>
+            </StaffLayout>
+          }
+        />
+        <Route
           path="/gatepass"
           element={
             <PrivateRoute>
@@ -102,16 +124,6 @@ const App = () => {
             <PrivateRoute>
               <ProtectedLayout>
                 <LeaveForm />
-              </ProtectedLayout>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/staff-dashboard"
-          element={
-            <PrivateRoute>
-              <ProtectedLayout>
-                <StaffDashboard />
               </ProtectedLayout>
             </PrivateRoute>
           }
@@ -133,6 +145,26 @@ const App = () => {
               <ProtectedLayout>
                 <Request />
               </ProtectedLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/staff-medical-requests"
+          element={
+            <PrivateRoute>
+              <StaffLayout>
+                <StaffMedicalRequests />
+              </StaffLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/staff-onduty-requests"
+          element={
+            <PrivateRoute>
+              <StaffLayout>
+                <StaffOndutyRequests />
+              </StaffLayout>
             </PrivateRoute>
           }
         />

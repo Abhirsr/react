@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   min-height: 10vh;
+  margin:50px;
 }
 
 .dashboard-header {
@@ -118,4 +119,84 @@
 
 .submit-btn:hover {
   background-color: #005f8a;
+}
+.gatepass-container {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #e0eafc, #cfdef3);
+  padding: 10px;
+}
+
+.gatepass-content {
+  background-color: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.gatepass-content h2 {
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.gatepass-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.gatepass-form input,
+.gatepass-form select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.time-label {
+  margin-top: 10px;
+  font-weight: 500;
+  text-align: left;
+  color: #555;
+  text-align: center;
+  font-size: 18px;
+}
+
+.time-input-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.time-input-group select {
+  flex: 1;
+}
+
+.submit-btn {
+  background-color: #4a90e2;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.submit-btn:hover {
+  background-color: #357ab7;
+}
+
+@media (max-width: 480px) {
+  .gatepass-content {
+    padding: 20px;
+  }
 }

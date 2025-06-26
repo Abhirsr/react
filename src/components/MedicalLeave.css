@@ -1,6 +1,7 @@
 body {
-  margin:0;
+  margin: 0;
   font-family: 'Segoe UI', sans-serif;
+  background-color: #e0f4ff;
 }
 
 .dashboard-container {
@@ -49,9 +50,9 @@ body {
   flex: 1;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding: 30px 0;
-  background-color: #2089c1;
+  background-color: #e0f4ff;
 }
 
 .form-container {
@@ -60,30 +61,56 @@ body {
   border-radius: 12px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 500px;
+  max-width: 550px;
 }
 
 .leave-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 16px;
 }
 
+
+.form-container h2 {
+  margin-bottom: 30px;
+  font-size: 24px;
+  color: #00060a;
+  text-align: center;
+}
 .leave-form input,
+.leave-form textarea,
 .leave-form button {
   padding: 12px;
   font-size: 15px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  width: 100%;
 }
 
-.leave-form input::placeholder {
+.leave-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.leave-form input::placeholder,
+.leave-form textarea::placeholder {
   color: #888;
 }
 
-.leave-form input[type="file"] {
-  padding: 6px;
-  border: none;
+.date-row {
+  display: flex;
+  gap: 10px;
+}
+
+.date-row input {
+  flex: 1;
+}
+
+.file-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
 }
 
 .preview-container {
@@ -109,18 +136,8 @@ body {
 .submit-btn:hover {
   background-color: #005f8a;
 }
-
-.date-fields {
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
-  margin-bottom: 10px;
-  justify-content: space-between;
-}
-
-.date-fields .date-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
+.file-upload-row label {
+  font-weight: 500;
+  min-width: 225px; 
+  text-align: center;
 }

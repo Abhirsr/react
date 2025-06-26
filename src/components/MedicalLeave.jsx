@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
 import supabase from "../supabaseClient";
 import { uploadMedicalCertificate } from "../api/uploadMedicalCertificate";
 import "./MedicalLeave.css";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
 
 const MedicalLeave = () => {
   const navigate = useNavigate();
@@ -18,9 +19,9 @@ const MedicalLeave = () => {
     proofFile: null,
   });
 
+  const [userEmail, setUserEmail] = useState("");
   const [previewUrl, setPreviewUrl] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -28,7 +29,7 @@ const MedicalLeave = () => {
       if (data?.user?.email) {
         setUserEmail(data.user.email);
       } else {
-        console.error("Failed to get user email:", error);
+        console.error("User not logged in:", error);
       }
     };
     fetchUser();
@@ -37,8 +38,9 @@ const MedicalLeave = () => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (files) {
-      setFormData((prev) => ({ ...prev, [name]: files[0] }));
-      setPreviewUrl(URL.createObjectURL(files[0]));
+      const file = files[0];
+      setFormData((prev) => ({ ...prev, [name]: file }));
+      setPreviewUrl(URL.createObjectURL(file));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -52,27 +54,30 @@ const MedicalLeave = () => {
       let proofFileUrl = null;
 
       if (formData.proofFile) {
-        const { publicUrl, error: uploadError } = await uploadMedicalCertificate(formData.proofFile);
+        const { publicUrl, error: uploadError } =
+          await uploadMedicalCertificate(formData.proofFile);
         if (uploadError) {
-          alert("File upload failed.");
-          console.error(uploadError);
+          console.error("Upload error:", uploadError);
+          alert("Failed to upload certificate.");
           setSubmitting(false);
           return;
         }
         proofFileUrl = publicUrl;
       }
 
-      const { error: insertError } = await supabase.from("medical_leaves").insert({
-        name: formData.name,
-        register_number: formData.register_number,
-        year: formData.year,
-        department: formData.department,
-        faculty_mail: formData.faculty_mail,
-        from_date: formData.from_date,
-        to_date: formData.to_date,
-        medical_certificate_url: proofFileUrl,
-        created_at: new Date().toISOString(),
-      });
+      const { error: insertError } = await supabase
+        .from("medical_leaves")
+        .insert({
+          name: formData.name,
+          register_number: formData.register_number,
+          year: formData.year,
+          department: formData.department,
+          faculty_mail: formData.faculty_mail,
+          from_date: formData.from_date,
+          to_date: formData.to_date,
+          medical_certificate_url: proofFileUrl,
+          created_at: new Date().toISOString(),
+        });
 
       if (insertError) {
         console.error("Supabase insert error:", insertError);
@@ -91,7 +96,7 @@ const MedicalLeave = () => {
         submitted_at: new Date().toISOString(),
         type: "medicalleave",
         status: "Pending",
-        user_email: userEmail, // 👈 Filter key for request listing
+        medical_doc_path: proofFileUrl,
       });
 
       if (requestError) {
@@ -101,9 +106,9 @@ const MedicalLeave = () => {
 
       localStorage.setItem("user_register_number", formData.register_number);
       alert("Medical leave submitted successfully!");
-      navigate("/requests?type=medicalleave",{replace:true});
+      navigate("/requests?type=medicalleave", { replace: true });
 
-      // Reset form
+      // Reset
       setFormData({
         name: "",
         register_number: "",
@@ -125,43 +130,96 @@ const MedicalLeave = () => {
 
   return (
     <main className="leave-content">
-      <div className="form-container">
+      <div className="leave-box">
         <h2>Medical Leave Application</h2>
         <form onSubmit={handleSubmit} className="leave-form">
-          <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} required />
-          <input type="text" name="register_number" placeholder="Register Number" value={formData.register_number} onChange={handleChange} required />
-          <input type="text" name="year" placeholder="Year" value={formData.year} onChange={handleChange} required />
-          <input type="text" name="department" placeholder="Department" value={formData.department} onChange={handleChange} required />
-          <input type="email" name="faculty_mail" placeholder="Faculty Mail" value={formData.faculty_mail} onChange={handleChange} required />
+          <input
+            type="text"
+            name="name"
+            placeholder="Your Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="text"
+            name="register_number"
+            placeholder="Register Number"
+            value={formData.register_number}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="text"
+            name="year"
+            placeholder="Year"
+            value={formData.year}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="text"
+            name="department"
+            placeholder="Department"
+            value={formData.department}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="email"
+            name="faculty_mail"
+            placeholder="Faculty Mail"
+            value={formData.faculty_mail}
+            onChange={handleChange}
+            required
+          />
 
-          <div className="date-fields">
+          <div className="date-row">
             <div className="date-group">
-              <label htmlFor="from_date">From Date</label>
-              <input type="date" id="from_date" name="from_date" value={formData.from_date} onChange={handleChange} required />
+              <DatePicker
+                id="from_date"
+                value={formData.from_date ? dayjs(formData.from_date) : null}
+                onChange={(date, dateString) =>
+                  setFormData((prev) => ({ ...prev, from_date: dateString }))
+                }
+                placeholder="From Date"
+                format="YYYY-MM-DD"
+                style={{ width: "100%" }}
+                required
+              />
             </div>
             <div className="date-group">
-              <label htmlFor="to_date">To Date</label>
-              <input type="date" id="to_date" name="to_date" value={formData.to_date} onChange={handleChange} required />
+              <DatePicker
+                id="to_date"
+                value={formData.to_date ? dayjs(formData.to_date) : null}
+                onChange={(date, dateString) =>
+                  setFormData((prev) => ({ ...prev, to_date: dateString }))
+                }
+                placeholder="To Date"
+                format="YYYY-MM-DD"
+                style={{ width: "100%" }}
+                required
+              />
             </div>
           </div>
 
+
           <div className="file-upload-container">
-            <label htmlFor="proofFile">Upload Medical Certificate</label>
+            <span className="upload-label">Upload Medical Certificate:</span>
             <input
               type="file"
-              id="proofFile"
               name="proofFile"
+              id="proofFile"
               onChange={handleChange}
-              accept="image/*,.pdf"
+              accept=".pdf,.jpg,.jpeg,.png"
               required
             />
-            {formData.proofFile && <span className="file-name">{formData.proofFile.name}</span>}
           </div>
 
           {previewUrl && (
             <div className="preview-container">
               <h4>Preview:</h4>
-              {formData.proofFile.type.startsWith("image") ? (
+              {formData.proofFile?.type?.startsWith("image") ? (
                 <img src={previewUrl} alt="Preview" className="file-preview" />
               ) : (
                 <p>{formData.proofFile.name}</p>

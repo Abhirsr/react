@@ -109,7 +109,7 @@ body {
 .dashboard-content {
   flex-grow: 1;
   padding: 40px;
-  margin: 25px;
+  margin: 70px;
   background-color: #f4f4f4;
   border-radius: 12px;
   box-shadow: 0 8px 20px var(--shadow-light);

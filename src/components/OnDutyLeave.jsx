@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import supabase from '../supabaseClient';
-import { uploadProofFile } from '../api/UploadProof';
-import './OnDutyLeave.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import supabase from "../supabaseClient";
+import { uploadProofFile } from "../api/UploadProof";
+import "./OnDutyLeave.css";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
+
 const OnDutyLeave = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    register_number: '',
-    eventName: '',
-    eventType: '',
-    reason: '',
-    facultyEmail: '',
-    fromDate: '',
-    toDate: '',
-    hours: '',
+    name: "",
+    register_number: "",
+    eventName: "",
+    eventType: "",
+    reason: "",
+    facultyEmail: "",
+    fromDate: "",
+    toDate: "",
+    hours: "",
     proofFile: null,
   });
 
@@ -37,7 +40,10 @@ const OnDutyLeave = () => {
 
     try {
       // 🔐 Get the logged-in user's email
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
       if (userError || !user) {
         alert("User not logged in.");
         setSubmitting(false);
@@ -47,10 +53,12 @@ const OnDutyLeave = () => {
       let proofFileUrl = null;
 
       if (formData.proofFile) {
-        const { publicUrl, error: uploadError } = await uploadProofFile(formData.proofFile);
+        const { publicUrl, error: uploadError } = await uploadProofFile(
+          formData.proofFile
+        );
         if (uploadError) {
-          console.error('Upload error:', uploadError);
-          alert('Failed to upload proof file.');
+          console.error("Upload error:", uploadError);
+          alert("Failed to upload proof file.");
           setSubmitting(false);
           return;
         }
@@ -70,11 +78,13 @@ const OnDutyLeave = () => {
         user_email: user.email, // ✅ include user's email
       };
 
-      const { error: leaveError } = await supabase.from('onduty_leaves').insert(insertPayload);
+      const { error: leaveError } = await supabase
+        .from("onduty_leaves")
+        .insert(insertPayload);
 
       if (leaveError) {
-        console.error('Supabase insert error (onduty_leaves):', leaveError);
-        alert('Failed to submit on-duty leave.');
+        console.error("Supabase insert error (onduty_leaves):", leaveError);
+        alert("Failed to submit on-duty leave.");
         setSubmitting(false);
         return;
       }
@@ -83,42 +93,44 @@ const OnDutyLeave = () => {
         name: formData.name,
         reg_no: formData.register_number,
         faculty_email: formData.facultyEmail,
-        reason: 'On-Duty Leave',
+        reason: "On-Duty Leave",
         from_date: formData.fromDate,
         to_date: formData.toDate,
         submitted_at: new Date().toISOString(),
-        type: 'ondutyleave',
-        status: 'Pending',
+        type: "ondutyleave",
+        status: "Pending",
         user_email: user.email, // ✅ include user's email
       };
 
-      const { error: requestError } = await supabase.from('odrequests').insert(requestPayload);
+      const { error: requestError } = await supabase
+        .from("odrequests")
+        .insert(requestPayload);
 
       if (requestError) {
-        console.error('Requests table insert error:', requestError);
-        alert('Failed to record leave in requests.');
+        console.error("Requests table insert error:", requestError);
+        alert("Failed to record leave in requests.");
       }
 
-      localStorage.setItem('user_register_number', formData.register_number);
-      alert('On-duty leave submitted successfully!');
-      navigate('/requests?type=ondutyleave',{replace:true});
+      localStorage.setItem("user_register_number", formData.register_number);
+      alert("On-duty leave submitted successfully!");
+      navigate("/requests?type=ondutyleave", { replace: true });
 
       setFormData({
-        name: '',
-        register_number: '',
-        eventName: '',
-        eventType: '',
-        reason: '',
-        facultyEmail: '',
-        fromDate: '',
-        toDate: '',
-        hours: '',
+        name: "",
+        register_number: "",
+        eventName: "",
+        eventType: "",
+        reason: "",
+        facultyEmail: "",
+        fromDate: "",
+        toDate: "",
+        hours: "",
         proofFile: null,
       });
       setPreviewUrl(null);
     } catch (err) {
-      console.error('Submission error:', err);
-      alert('Something went wrong.');
+      console.error("Submission error:", err);
+      alert("Something went wrong.");
     }
 
     setSubmitting(false);
@@ -129,21 +141,80 @@ const OnDutyLeave = () => {
       <div className="leave-box">
         <h2>On-duty Leave Application</h2>
         <form onSubmit={handleSubmit} className="leave-form">
-          <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} required />
-          <input type="text" name="register_number" placeholder="Register Number" value={formData.register_number} onChange={handleChange} required />
-          <input type="text" name="eventName" placeholder="Event Name" value={formData.eventName} onChange={handleChange} required />
-          <input type="text" name="eventType" placeholder="Event Type" value={formData.eventType} onChange={handleChange} required />
-          <textarea name="reason" placeholder="Reason" value={formData.reason} onChange={handleChange} required />
-          <input type="email" name="facultyEmail" placeholder="Faculty Email" value={formData.facultyEmail} onChange={handleChange} required />
+          <input
+            type="text"
+            name="name"
+            placeholder="Your Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="text"
+            name="register_number"
+            placeholder="Register Number"
+            value={formData.register_number}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="text"
+            name="eventName"
+            placeholder="Event Name"
+            value={formData.eventName}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="text"
+            name="eventType"
+            placeholder="Event Type"
+            value={formData.eventType}
+            onChange={handleChange}
+            required
+          />
+          <textarea
+            name="reason"
+            placeholder="Reason"
+            value={formData.reason}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="email"
+            name="facultyEmail"
+            placeholder="Faculty Email"
+            value={formData.facultyEmail}
+            onChange={handleChange}
+            required
+          />
 
-          <div className="date-fields">
+          <div className="date-row">
             <div className="date-group">
-              <label htmlFor="fromDate">From Date</label>
-              <input type="date" name="fromDate" value={formData.fromDate} onChange={handleChange} required />
+              <DatePicker
+                id="fromDate"
+                value={formData.fromDate ? dayjs(formData.fromDate) : null}
+                onChange={(date, dateString) => {
+                  setFormData((prev) => ({ ...prev, fromDate: dateString }));
+                }}
+                placeholder="From Date"
+                format="YYYY-MM-DD"
+                style={{ width: "100%" }}
+                required
+              />
             </div>
             <div className="date-group">
-              <label htmlFor="toDate">To Date</label>
-              <input type="date" name="toDate" value={formData.toDate} onChange={handleChange} required />
+              <DatePicker
+                id="toDate"
+                value={formData.toDate ? dayjs(formData.toDate) : null}
+                onChange={(date, dateString) => {
+                  setFormData((prev) => ({ ...prev, toDate: dateString }));
+                }}
+                placeholder="To Date"
+                format="YYYY-MM-DD"
+                style={{ width: "100%" }}
+                required
+              />
             </div>
           </div>
 
@@ -156,23 +227,23 @@ const OnDutyLeave = () => {
             required
           />
 
-          <div className="file-upload-container">
-            <label htmlFor="proofFile">Upload Proof</label>
+          <div className="file-upload-row">
+            <span className="upload-label">Upload OD Proof:</span>
             <input
               type="file"
-              id="proofFile"
               name="proofFile"
+              id="proofFile"
               onChange={handleChange}
-              accept="image/*,.pdf"
+              accept=".pdf,.jpg,.jpeg,.png"
               required
             />
-            {formData.proofFile && <span className="file-name">{formData.proofFile.name}</span>}
           </div>
 
           {previewUrl && (
             <div className="preview-container">
               <h4>Preview:</h4>
-              {formData.proofFile.type.startsWith('image') ? (
+              {formData.proofFile &&
+              formData.proofFile.type.startsWith("image") ? (
                 <img src={previewUrl} alt="Preview" className="file-preview" />
               ) : (
                 <p>{formData.proofFile.name}</p>
@@ -181,7 +252,7 @@ const OnDutyLeave = () => {
           )}
 
           <button type="submit" className="submit-btn" disabled={submitting}>
-            {submitting ? 'Submitting...' : 'Submit'}
+            {submitting ? "Submitting..." : "Submit"}
           </button>
         </form>
       </div>

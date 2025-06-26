@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 
 const InternshipForm = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     register_number: "",
@@ -22,6 +23,7 @@ const InternshipForm = () => {
     offerLetter: null,
   });
 
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -30,6 +32,7 @@ const InternshipForm = () => {
     const { name, value, files } = e.target;
     if (files && files.length > 0) {
       setFormData((prev) => ({ ...prev, [name]: files[0] }));
+      setPreviewUrl(URL.createObjectURL(files[0]));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -110,7 +113,6 @@ const InternshipForm = () => {
         alert("Failed to record internship in requests.");
       }
 
-      // 🔔 Bell Notification
       const existingNotifications =
         JSON.parse(localStorage.getItem("notifications")) || [];
       const newNotification = {
@@ -118,7 +120,10 @@ const InternshipForm = () => {
         message: "✅ Internship request submitted!",
       };
       const updatedNotifications = [newNotification, ...existingNotifications];
-      localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+      localStorage.setItem(
+        "notifications",
+        JSON.stringify(updatedNotifications)
+      );
       localStorage.setItem("hasUnreadNotifications", "true");
 
       alert("Internship application submitted successfully!");
@@ -135,6 +140,7 @@ const InternshipForm = () => {
       });
       setStartDate(null);
       setEndDate(null);
+      setPreviewUrl(null);
       navigate("/requests?type=internship", { replace: true });
     } catch (err) {
       console.error("Submission error:", err);
@@ -233,20 +239,29 @@ const InternshipForm = () => {
             </div>
           </div>
 
-          <div className="file-upload-container">
+          <div className="file-upload-row">
             <label htmlFor="offerLetter">Upload Offer Letter</label>
             <input
               type="file"
               id="offerLetter"
               name="offerLetter"
               onChange={handleChange}
-              accept="image/*,.pdf"
+              accept=".pdf,.jpg,.jpeg,.png"
               required
             />
-            {formData.offerLetter && (
-              <span className="file-name">{formData.offerLetter.name}</span>
-            )}
           </div>
+
+          {previewUrl && (
+            <div className="preview-container">
+              <h4>Preview:</h4>
+              {formData.offerLetter &&
+              formData.offerLetter.type?.startsWith("image") ? (
+                <img src={previewUrl} alt="Preview" className="file-preview" />
+              ) : (
+                <p>{formData.offerLetter?.name}</p>
+              )}
+            </div>
+          )}
 
           <div className="submit-btn-container">
             <button type="submit" className="submit-btn" disabled={submitting}>
