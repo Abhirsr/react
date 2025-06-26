@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
 import supabase from "../supabaseClient";
 
-// ✅ Domain restriction
-const ALLOWED_DOMAIN = "@kanchiuniv.ac.in";
-const isAllowedDomain = (email) => email.endsWith(ALLOWED_DOMAIN);
-
 const OAuthCallback = () => {
   useEffect(() => {
     const validateAndRedirect = async () => {
@@ -22,13 +18,7 @@ const OAuthCallback = () => {
       const user = session.user;
       const email = user.email;
 
-      // ✅ Block if not @kanchiuniv.ac.in
-      if (!isAllowedDomain(email)) {
-        alert(`Only ${ALLOWED_DOMAIN} emails are allowed.`);
-        await supabase.auth.signOut(); // Logout
-        window.location.replace("/signin");
-        return;
-      }
+      // 🔴 Domain restriction removed here
 
       const name =
         user.user_metadata?.full_name || user.user_metadata?.name || "Unnamed";

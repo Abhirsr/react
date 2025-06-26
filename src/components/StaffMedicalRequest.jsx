@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import supabase from "../supabaseClient";
 import "./StaffMedicalRequests.css";
 
-
-const StaffMedicalRequests = () => {
+const StaffMedicalRequests = ({ role }) => {
   const [requests, setRequests] = useState([]);
   const [previewUrl, setPreviewUrl] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,7 +10,7 @@ const StaffMedicalRequests = () => {
   useEffect(() => {
     const syncAndFetchRequests = async () => {
       const { data: allMedicalRequests, error } = await supabase
-        .from("requests")
+        .from("staff_medical_leave_requests")
         .select("*")
         .eq("type", "medicalleave")
         .order("submitted_at", { ascending: false });
@@ -74,6 +73,66 @@ const StaffMedicalRequests = () => {
     setIsModalOpen(true);
   };
 
+  const handleForwardToHOD = async (request) => {
+    try {
+      const res = await fetch("http://localhost:5050/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          facultyEmail: request.faculty_email,
+          studentName: request.name,
+          regNo: request.reg_no,
+          from: request.from_date,
+          to: request.to_date,
+          submittedAt: request.submitted_at,
+        }),
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        alert(result.message);
+
+        await supabase
+          .from("requests")
+          .update({ status: "forwarded" })
+          .eq("id", request.id);
+
+        await supabase
+          .from("staff_medical_leave_requests")
+          .update({ status: "forwarded" })
+          .eq("id", request.id);
+
+        setRequests((prev) =>
+          prev.map((r) =>
+            r.id === request.id ? { ...r, status: "forwarded" } : r
+          )
+        );
+      } else {
+        alert("Error: " + result.error);
+      }
+    } catch (err) {
+      console.error("Forward error:", err);
+      alert("Failed to forward the request.");
+    }
+  };
+
+  const handleApproval = async (request, newStatus) => {
+    try {
+      await supabase.from("requests").update({ status: newStatus }).eq("id", request.id);
+      await supabase.from("staff_medical_leave_requests").update({ status: newStatus }).eq("id", request.id);
+
+      setRequests((prev) =>
+        prev.map((r) => (r.id === request.id ? { ...r, status: newStatus } : r))
+      );
+
+      alert(`Request ${newStatus}`);
+    } catch (err) {
+      console.error("Approval error:", err);
+      alert("Failed to update status.");
+    }
+  };
+
   const isPdf = (url) => url.toLowerCase().endsWith(".pdf");
 
   return (
@@ -91,6 +150,7 @@ const StaffMedicalRequests = () => {
               <th>Submitted At</th>
               <th>Status</th>
               <th>Document</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -111,13 +171,39 @@ const StaffMedicalRequests = () => {
                     View
                   </button>
                 </td>
+                <td>
+                  {role === "faculty" && (
+                    <button
+                      className="forward-button"
+                      onClick={() => handleForwardToHOD(request)}
+                      disabled={request.status === "forwarded"}
+                    >
+                      {request.status === "forwarded" ? "Forwarded" : "Forward to HOD"}
+                    </button>
+                  )}
+                  {role === "hod" && request.status === "forwarded" && (
+                    <>
+                      <button
+                        className="approve-button"
+                        onClick={() => handleApproval(request, "approved")}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        className="reject-button"
+                        onClick={() => handleApproval(request, "rejected")}
+                      >
+                        Reject
+                      </button>
+                    </>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Modal Preview */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>

@@ -113,3 +113,21 @@
   .forward-button:hover {
     background-color: #45a049;
   }
+  .forward-button {
+  background-color: #2980b9;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.forward-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.forward-button:hover:not(:disabled) {
+  background-color: #1f6394;
+}

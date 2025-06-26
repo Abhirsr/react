@@ -28,8 +28,9 @@ import StaffDashboard from "./components/StaffDashboard";
 import StaffLayout from "./components/StaffLayout";
 import StaffOndutyRequests from "./components/StaffOnDutyRequests";
 import StaffMedicalRequests from "./components/StaffMedicalRequest";
+import { useAuth } from "./context/AuthContext"; // ✅ Auth context
 
-// Shared layout with Sidebar and Header
+// ✅ Shared layout for student/faculty with sidebar + header
 const ProtectedLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
@@ -48,6 +49,8 @@ const ProtectedLayout = ({ children }) => {
 };
 
 const App = () => {
+  const {role,user} = useAuth(); // ✅ Use the hook inside the component
+  console.log("User role:", user); // ✅ Log the role for debugging
   return (
     <Router>
       <Routes>
@@ -91,24 +94,6 @@ const App = () => {
           }
         />
         <Route
-          path="/staff-dashboard"
-          element={
-            <PrivateRoute>
-              <StaffLayout />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/staff-profile"
-          element={
-            <StaffLayout>
-              <div style={{ padding: "24px" }}>
-                <h2>Staff Profile (Coming Soon)</h2>
-              </div>
-            </StaffLayout>
-          }
-        />
-        <Route
           path="/gatepass"
           element={
             <PrivateRoute>
@@ -149,11 +134,41 @@ const App = () => {
           }
         />
         <Route
+          path="/internshippermission"
+          element={
+            <PrivateRoute>
+              <ProtectedLayout>
+                <InternshipForm />
+              </ProtectedLayout>
+            </PrivateRoute>
+          }
+        />
+
+        {/* Staff-specific routes */}
+        <Route
+          path="/staff-dashboard"
+          element={
+            <PrivateRoute>
+              <StaffLayout />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/staff-profile"
+          element={
+            <StaffLayout>
+              <div style={{ padding: "24px" }}>
+                <h2>Staff Profile (Coming Soon)</h2>
+              </div>
+            </StaffLayout>
+          }
+        />
+        <Route
           path="/staff-medical-requests"
           element={
             <PrivateRoute>
               <StaffLayout>
-                <StaffMedicalRequests />
+                <StaffMedicalRequests role={role} /> {/* ✅ Pass role */}
               </StaffLayout>
             </PrivateRoute>
           }
@@ -168,18 +183,8 @@ const App = () => {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/internshippermission"
-          element={
-            <PrivateRoute>
-              <ProtectedLayout>
-                <InternshipForm />
-              </ProtectedLayout>
-            </PrivateRoute>
-          }
-        />
 
-        {/* Fallback */}
+        {/* Fallback route */}
         <Route path="*" element={<Navigate to="/signin" replace />} />
       </Routes>
     </Router>
