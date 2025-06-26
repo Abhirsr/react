@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useRef} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   FaUserMd,
@@ -48,7 +48,6 @@ const Sidebar = ({ onClose, isOpen }) => {
   };
 
   const requestCategories = [
-    { label: "All Requests", path: "/requests" },
     { label: "Medical Leave", path: "/requests?type=medicalleave" },
     { label: "On-duty Leave", path: "/requests?type=ondutyleave" },
     { label: "Internship Permission", path: "/requests?type=internship" },
@@ -75,10 +74,9 @@ const Sidebar = ({ onClose, isOpen }) => {
           style={{ cursor: "pointer" }}
           title="Home"
         >
-          <img src={defaultAvatar} alt="User" className="avatar2" />
           {isOpen && (
             <div className="user-info">
-              <h3>Home</h3>
+              <h3><img src={defaultAvatar} alt="User" className="avatar2" />Home</h3>
             </div>
           )}
         </div>

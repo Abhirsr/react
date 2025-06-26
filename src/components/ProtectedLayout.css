@@ -1,0 +1,54 @@
+/* Layout container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Header stays fixed */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #003366;
+  color: white;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+/* Wrapper under header */
+.content-wrapper {
+  display: flex;
+  flex: 1;
+  margin-top: 60px; /* below the fixed header */
+  height: calc(100vh - 60px);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 0;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  background-color: #cceeff;
+}
+
+.sidebar.open {
+  width: 240px;
+}
+
+/* Main content */
+.main-content-area {
+  flex: 1;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Shift only when sidebar is open */
+.shifted {
+  margin-left: 240px;
+}
