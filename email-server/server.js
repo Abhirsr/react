@@ -52,7 +52,7 @@ app.post("/send-email", async (req, res) => {
     res.status(200).json({ message: "Email sent to HOD!" });
   } catch (error) {
     console.error("Email error:", error);
-    res.status(500).json({ error: "Failed to send email" });
+    res.status(500).json({ error: error.message });
   }
 });
  
