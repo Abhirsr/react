@@ -108,17 +108,17 @@
     color: #fff;
 }
   
-.bottom-area {
+.bottom-area2 {
     padding-top: 10px;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     margin-top: auto;
 }
   
-.profile-button {
+.profile-button2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255, 255, 255, 0.2);
+    
     padding: 10px 15px;
     border-radius: 8px;
     cursor: pointer;
@@ -127,11 +127,11 @@
     margin-bottom: 40px;
 }
   
-.profile-button:hover {
+.profile-button2:hover {
     background-color: #e0eaff;
 }
   
-.profile-icon {
+.profile-icon2 {
     width: 24px;
     height: 24px;
 }
@@ -141,7 +141,6 @@
   position: relative;
   width: 100%;
   height: 100%;
-  background: #fff;
   box-shadow: none;
   border-radius: 0;
   overflow: visible;

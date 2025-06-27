@@ -89,10 +89,10 @@ const StaffSidebar = ({ onNavigate }) => {
         )}
       </ul>
 
-      <div className="bottom-area">
-        <div className="profile-button" onClick={() => handleNavigation("/staff-profile")}>
+      <div className="bottom-area2">
+        <div className="profile-button2" onClick={() => handleNavigation("/staff-profile")}>
           <span className="profile-text">Profile</span>
-          <span className="profile-icon">👤</span>
+          <span className="profile-icon2">👤</span>
         </div>
       </div>
     </div>

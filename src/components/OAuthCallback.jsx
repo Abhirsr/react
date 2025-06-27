@@ -18,15 +18,19 @@ const OAuthCallback = () => {
       const user = session.user;
       const email = user.email;
 
-      // 🔴 Domain restriction removed here
-
       const name =
-        user.user_metadata?.full_name || user.user_metadata?.name || "Unnamed";
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        "Unnamed";
+
       const regNumber = email.split("@")[0];
       const userId = user.id;
 
       console.log("OAuth user:", user);
 
+      // Don't decide role here — let your DB (and AuthContext) handle it
+
+      // Insert or update into 'profiles' table (optional)
       const { error: insertError } = await supabase.from("profiles").upsert(
         {
           id: userId,
@@ -40,13 +44,11 @@ const OAuthCallback = () => {
       if (insertError) {
         console.error("❌ Failed to insert profile:", insertError);
       } else {
-        console.log("✅ Profile inserted or updated");
+        console.log("✅ Profile inserted/updated.");
       }
 
-      const isStaff = localStorage.getItem("login_role") === "staff";
-      localStorage.removeItem("login_role");
-
-      window.location.replace(isStaff ? "/staff-dashboard" : "/dashboard");
+      // ✅ Now redirect to `/`, where RoleBasedRedirect takes over
+      window.location.replace("/");
     };
 
     validateAndRedirect();

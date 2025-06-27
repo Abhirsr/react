@@ -19,21 +19,8 @@ const MedicalLeave = () => {
     proofFile: null,
   });
 
-  const [userEmail, setUserEmail] = useState("");
   const [previewUrl, setPreviewUrl] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (data?.user?.email) {
-        setUserEmail(data.user.email);
-      } else {
-        console.error("User not logged in:", error);
-      }
-    };
-    fetchUser();
-  }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -50,6 +37,12 @@ const MedicalLeave = () => {
     e.preventDefault();
     setSubmitting(true);
 
+    if (!formData.from_date || !formData.to_date) {
+      alert("Please select both From and To dates.");
+      setSubmitting(false);
+      return;
+    }
+
     try {
       let proofFileUrl = null;
 
@@ -65,6 +58,11 @@ const MedicalLeave = () => {
         proofFileUrl = publicUrl;
       }
 
+      const submittedAt = new Date().toISOString();
+
+      const { data: userData } = await supabase.auth.getUser();
+      const submitted_by = userData?.user?.email;
+
       const { error: insertError } = await supabase
         .from("medical_leaves")
         .insert({
@@ -76,7 +74,8 @@ const MedicalLeave = () => {
           from_date: formData.from_date,
           to_date: formData.to_date,
           medical_certificate_url: proofFileUrl,
-          created_at: new Date().toISOString(),
+          created_at: submittedAt,
+          submitted_by,
         });
 
       if (insertError) {
@@ -86,29 +85,26 @@ const MedicalLeave = () => {
         return;
       }
 
-      const { error: requestError } = await supabase.from("requests").insert({
+      const commonPayload = {
         name: formData.name,
         reg_no: formData.register_number,
         faculty_email: formData.faculty_mail,
         reason: "Medical Leave",
         from_date: formData.from_date,
         to_date: formData.to_date,
-        submitted_at: new Date().toISOString(),
+        submitted_at: submittedAt,
         type: "medicalleave",
         status: "Pending",
         medical_doc_path: proofFileUrl,
-      });
+        submitted_by,
+      };
 
-      if (requestError) {
-        console.error("Requests table insert error:", requestError);
-        alert("Failed to record leave in requests.");
-      }
+      await supabase.from("staff_medical_leave_requests").insert(commonPayload);
 
       localStorage.setItem("user_register_number", formData.register_number);
       alert("Medical leave submitted successfully!");
       navigate("/requests?type=medicalleave", { replace: true });
 
-      // Reset
       setFormData({
         name: "",
         register_number: "",
@@ -133,46 +129,11 @@ const MedicalLeave = () => {
       <div className="leave-box">
         <h2>Medical Leave Application</h2>
         <form onSubmit={handleSubmit} className="leave-form">
-          <input
-            type="text"
-            name="name"
-            placeholder="Your Name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="register_number"
-            placeholder="Register Number"
-            value={formData.register_number}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="year"
-            placeholder="Year"
-            value={formData.year}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="department"
-            placeholder="Department"
-            value={formData.department}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="faculty_mail"
-            placeholder="Faculty Mail"
-            value={formData.faculty_mail}
-            onChange={handleChange}
-            required
-          />
+          <input type="text" name="name" placeholder="Your Name" value={formData.name} onChange={handleChange} required />
+          <input type="text" name="register_number" placeholder="Register Number" value={formData.register_number} onChange={handleChange} required />
+          <input type="text" name="year" placeholder="Year" value={formData.year} onChange={handleChange} required />
+          <input type="text" name="department" placeholder="Department" value={formData.department} onChange={handleChange} required />
+          <input type="email" name="faculty_mail" placeholder="Faculty Mail" value={formData.faculty_mail} onChange={handleChange} required />
 
           <div className="date-row">
             <div className="date-group">
@@ -202,7 +163,6 @@ const MedicalLeave = () => {
               />
             </div>
           </div>
-
 
           <div className="file-upload-container">
             <span className="upload-label">Upload Medical Certificate:</span>

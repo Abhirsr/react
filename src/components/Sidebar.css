@@ -64,7 +64,8 @@
 .sidebar-header.active {
   background-color: rgba(30, 144, 255, 0.4);
   border-radius: 10px;
-  padding: 8px;
+  padding-bottom: 50px;
+  margin-bottom: 12px;
 }
 
 .sidebar.closed .user-info {
@@ -144,7 +145,6 @@
 .bottom-area {
   padding: 15px 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background: transparent;
 }
 
 .sidebar.closed .bottom-area {
@@ -159,10 +159,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(30, 144, 255, 0.4);
   padding: 12px 10px;
   border-radius: 10px;
-  color: black;
+  background-color:rgba(30, 144, 255, 0.4);
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s ease;
