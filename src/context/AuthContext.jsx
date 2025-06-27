@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
           .from("users") // ✅ Your custom user table
           .select("role")
           .eq("email", authUser.email)
-          .single();
+          .maybeSingle();
 
         if (userError) {
           console.error("❌ Failed to fetch user role from DB:", userError.message);

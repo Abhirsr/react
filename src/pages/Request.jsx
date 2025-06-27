@@ -4,7 +4,7 @@ import supabase from '../supabaseClient';
 import './Request.css';
 
 const TABLE_MAP = {
-  medicalleave: 'requests',
+  medicalleave: 'staff_medical_leave_requests',
   ondutyleave: 'odrequests',
   internship: 'staffinternshiprequests',
   leaveform: 'leave_requests',
@@ -54,8 +54,10 @@ const Request = () => {
 
     let request = supabase.from(table).select('*');
 
-    // filter by logged-in user
-    request = request.eq('user_email', userEmail);
+    // Filter by user_email for all tables except medical leave
+    if (type !== 'medicalleave') {
+      request = request.eq('user_email', userEmail);
+    }
 
     const { data, error } = await request.order('submitted_at', {
       ascending: false,

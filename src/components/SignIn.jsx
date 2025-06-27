@@ -15,39 +15,30 @@ const SignIn = () => {
       } = await supabase.auth.getSession();
 
       if (session?.user?.email) {
-        const storedRole = localStorage.getItem("login_role");
-        const redirectTo =
-          storedRole === "staff" ? "/staff-dashboard" : "/dashboard";
-
-        localStorage.removeItem("login_role");
-        window.location.replace(redirectTo);
+        // ✅ Always redirect to root so RoleBasedRedirect can handle proper routing
+        navigate("/");
       }
     };
 
     checkSession();
-  }, []);
+  }, [navigate]);
 
   const handleGoogleSignIn = async () => {
-    // Optional: Set default role as student (or adjust if needed)
-    localStorage.setItem("login_role", "student");
-
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: "http://localhost:5173/oauth-callback", // ✅ Adjust if deployed
+          redirectTo: "http://localhost:5173/oauth-callback", // ✅ Update in production
         },
       });
 
       if (error) {
         alert("Google Sign-In failed");
         console.error("Google SSO Error:", error.message);
-        localStorage.removeItem("login_role");
       }
     } catch (err) {
       console.error("Google SSO Exception:", err.message);
       alert("Something went wrong with Google Sign-In.");
-      localStorage.removeItem("login_role");
     }
   };
 
@@ -58,7 +49,6 @@ const SignIn = () => {
         <div className="signin-card">
           <div className="signin-header">
             <img src={logo} alt="Logo" className="logo-img" />
-            <h2></h2>
           </div>
 
           <button

@@ -21,16 +21,14 @@ import OAuthCallback from "./components/OAuthCallback";
 import ProfilePage from "./components/ProfilePage";
 import DashboardHome from "./components/DashboardHome";
 import Request from "./pages/Request";
-import ParticlesBackground from "./components/ParticleBackground";
 import InternshipForm from "./components/internship";
-import StaffSidebar from "./components/StaffSidebar";
 import StaffDashboard from "./components/StaffDashboard";
 import StaffLayout from "./components/StaffLayout";
 import StaffOndutyRequests from "./components/StaffOnDutyRequests";
 import StaffMedicalRequests from "./components/StaffMedicalRequest";
-import { useAuth } from "./context/AuthContext"; // ✅ Auth context
+import { useAuth } from "./context/AuthContext";
+import RoleBasedRedirect from "./components/RoleBasedRedirect"; // ✅ New
 
-// ✅ Shared layout for student/faculty with sidebar + header
 const ProtectedLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
@@ -49,20 +47,22 @@ const ProtectedLayout = ({ children }) => {
 };
 
 const App = () => {
-  const {role,user} = useAuth(); // ✅ Use the hook inside the component
-  console.log("User role:", user); // ✅ Log the role for debugging
+  const { role } = useAuth(); // ✅ Used for passing into staff components
+
   return (
     <Router>
       <Routes>
+        {/* ✅ Role-based redirect (root URL) */}
+        <Route path="/" element={<RoleBasedRedirect />} />
+
         {/* Public routes */}
-        <Route path="/" element={<Navigate to="/signin" replace />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/verify" element={<EmailVerified />} />
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/oauth-callback" element={<OAuthCallback />} />
 
-        {/* Protected routes */}
+        {/* Student routes */}
         <Route
           path="/dashboard"
           element={
@@ -144,23 +144,27 @@ const App = () => {
           }
         />
 
-        {/* Staff-specific routes */}
+        {/* Staff routes */}
         <Route
           path="/staff-dashboard"
           element={
             <PrivateRoute>
-              <StaffLayout />
+              <StaffLayout>
+                <StaffDashboard />
+              </StaffLayout>
             </PrivateRoute>
           }
         />
         <Route
           path="/staff-profile"
           element={
-            <StaffLayout>
-              <div style={{ padding: "24px" }}>
-                <h2>Staff Profile (Coming Soon)</h2>
-              </div>
-            </StaffLayout>
+            <PrivateRoute>
+              <StaffLayout>
+                <div style={{ padding: "24px" }}>
+                  <h2>Staff Profile (Coming Soon)</h2>
+                </div>
+              </StaffLayout>
+            </PrivateRoute>
           }
         />
         <Route
@@ -168,7 +172,7 @@ const App = () => {
           element={
             <PrivateRoute>
               <StaffLayout>
-                <StaffMedicalRequests role={role} /> {/* ✅ Pass role */}
+                <StaffMedicalRequests role={role} />
               </StaffLayout>
             </PrivateRoute>
           }
@@ -178,14 +182,14 @@ const App = () => {
           element={
             <PrivateRoute>
               <StaffLayout>
-                <StaffOndutyRequests />
+                <StaffOndutyRequests role={role} />
               </StaffLayout>
             </PrivateRoute>
           }
         />
 
-        {/* Fallback route */}
-        <Route path="*" element={<Navigate to="/signin" replace />} />
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );
