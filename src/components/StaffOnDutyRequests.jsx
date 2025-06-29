@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../supabaseClient";
-import "./StaffOndutyRequests.css";
+import "./StaffOnDutyRequests.css";
 
 const StaffOndutyRequests = ({ role }) => {
   const [requests, setRequests] = useState([]);
