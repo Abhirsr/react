@@ -9,7 +9,6 @@ const StaffMedicalRequests = ({ role }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Fetch logged-in user email
   useEffect(() => {
     const getUserEmail = async () => {
       const {
@@ -29,7 +28,6 @@ const StaffMedicalRequests = ({ role }) => {
     getUserEmail();
   }, []);
 
-  // Fetch and filter medical leave requests
   useEffect(() => {
     const fetchRequests = async () => {
       if (!userEmail || !role) return;
@@ -42,7 +40,6 @@ const StaffMedicalRequests = ({ role }) => {
       let query = supabase
         .from("staff_medical_leave_requests")
         .select("*")
-        //.eq("type", "medicalleave")
         .order("submitted_at", { ascending: false });
 
       if (role !== "faculty" && role !== "hod") {
@@ -107,10 +104,30 @@ const StaffMedicalRequests = ({ role }) => {
       if (res.ok) {
         alert(result.message);
 
-        await supabase
-          .from("staff_medical_leave_requests")
-          .update({ status: "forwarded" })
-          .eq("id", request.id);
+        const updates = [
+          supabase
+            .from("staff_medical_leave_requests")
+            .update({ status: "forwarded" })
+            .eq("id", request.id),
+          supabase
+            .from("medical_leaves")
+            .update({ status: "forwarded" })
+            .match({
+              register_number: request.reg_no,
+              created_at: request.submitted_at + "+00:00",
+            }),
+        ];
+
+        const [staffRes, medicalRes] = await Promise.all(updates);
+
+        if (staffRes.error || medicalRes.error) {
+          console.error(
+            "Failed to update DB:",
+            staffRes.error || medicalRes.error
+          );
+          alert("Failed to update status in database.");
+          return;
+        }
 
         setRequests((prev) =>
           prev.map((r) =>
@@ -128,15 +145,49 @@ const StaffMedicalRequests = ({ role }) => {
 
   const handleApproval = async (request, newStatus) => {
     try {
-      await supabase
-        .from("staff_medical_leave_requests")
-        .update({ status: newStatus })
-        .eq("id", request.id);
+      const updates = [
+        supabase
+          .from("staff_medical_leave_requests")
+          .update({ status: newStatus })
+          .eq("id", request.id),
+        supabase
+          .from("medical_leaves")
+          .update({ status: newStatus })
+          .match({
+            register_number: request.reg_no,
+            created_at: request.submitted_at + "+00:00",
+          }),
+      ];
+
+      const [staffRes, medicalRes] = await Promise.all(updates);
+
+      if (staffRes.error || medicalRes.error) {
+        console.error(
+          "Failed to update DB:",
+          staffRes.error || medicalRes.error
+        );
+        alert("Failed to update status in database.");
+        return;
+      }
+
+      // ✅ Send notification email to student and faculty
+      await fetch("http://localhost:5050/notify-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          studentEmail: request.submitted_by,
+          facultyEmail: request.faculty_email,
+          studentName: request.name,
+          regNo: request.reg_no,
+          from: request.from_date,
+          to: request.to_date,
+          submittedAt: request.submitted_at,
+          status: newStatus,
+        }),
+      });
 
       setRequests((prev) =>
-        prev.map((r) =>
-          r.id === request.id ? { ...r, status: newStatus } : r
-        )
+        prev.map((r) => (r.id === request.id ? { ...r, status: newStatus } : r))
       );
 
       alert(`Request ${newStatus}`);
@@ -191,7 +242,7 @@ const StaffMedicalRequests = ({ role }) => {
                     </button>
                   </td>
                   <td>
-                    {role === "faculty" && (
+                    {role === "faculty" && request.status === "Pending" &&(
                       <button
                         className="forward-button"
                         onClick={() => handleForwardToHOD(request)}
@@ -202,6 +253,7 @@ const StaffMedicalRequests = ({ role }) => {
                           : "Forward to HOD"}
                       </button>
                     )}
+
                     {role === "hod" && request.status === "forwarded" && (
                       <>
                         <button
@@ -226,7 +278,6 @@ const StaffMedicalRequests = ({ role }) => {
         </div>
       )}
 
-      {/* Modal for preview */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>

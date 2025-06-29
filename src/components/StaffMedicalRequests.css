@@ -1,126 +1,84 @@
 .staff-medical-container {
-    padding: 24px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7fb;
-    min-height: 100vh;
-    box-sizing: border-box;
-  }
-  
-  .staff-medical-container h2 {
-    color: #003366;
-    margin-bottom: 20px;
-  }
-  
-  .table-wrapper {
-    overflow-x: auto;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-  }
-  
-  th,
-  td {
-    padding: 12px 16px;
-    text-align: left;
-    font-size: 14px;
-    border-bottom: 1px solid #e0e0e0;
-  }
-  
-  th {
-    background-color: #003366;
-    color: white;
-    text-transform: uppercase;
-    font-size: 13px;
-  }
-  
-  tr:hover {
-    background-color: #e9f1ff;
-  }
-  
-  td {
-    color: #333;
-  }
-  .view-button {
-    background-color: #003366;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-  }
-  
-  .view-button:hover {
-    background-color: #00509e;
-  }
-  
-  /* Modal Styles */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.65);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-  }
-  
-  .modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    position: relative;
-    max-width: 90%;
-    max-height: 90%;
-    overflow: auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    text-align: center;
-  }
-  
-  .modal-content img {
-    max-width: 100%;
-    max-height: 70vh;
-    border-radius: 8px;
-  }
-  
-  .close-button {
-    margin-top: 12px;
-    background: #003366;
-    color: white;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  .forward-button {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  
-  .forward-button:hover {
-    background-color: #45a049;
-  }
-  .forward-button {
-  background-color: #2980b9;
+  padding: 24px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7fb;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.staff-medical-container h2 {
+  color: #003366;
+  margin-bottom: 20px;
+  font-size: 24px;
+  text-align: center;
+}
+
+/* Table Styles */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  min-width: 800px;
+}
+
+th,
+td {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+  background-color: #003366;
   color: white;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+td {
+  color: #333;
+}
+
+tr:hover {
+  background-color: #e9f1ff;
+}
+
+/* Buttons */
+.view-button,
+.forward-button,
+.approve-button,
+.reject-button,
+.close-button {
+  font-size: 13px;
   padding: 6px 12px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.3s ease;
+}
+
+/* View Button */
+.view-button {
+  background-color: #003366;
+  color: white;
+}
+
+.view-button:hover {
+  background-color: #00509e;
+}
+
+/* Forward Button */
+.forward-button {
+  background-color: #2980b9;
+  color: white;
 }
 
 .forward-button:disabled {
@@ -130,4 +88,162 @@
 
 .forward-button:hover:not(:disabled) {
   background-color: #1f6394;
+}
+
+/* Approve Button */
+button.approve-button {
+  background-color: #28a745;
+  color: white;
+}
+
+button.approve-button:hover {
+  background-color: #218838;
+}
+
+/* Reject Button */
+button.reject-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+button.reject-button:hover {
+  background-color: #c82333;
+}
+
+/* Close Button */
+.close-button {
+  background-color: #003366;
+  color: white;
+  margin-top: 12px;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.modal-content img {
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 8px;
+}
+
+/* ✅ Responsive Enhancements */
+@media screen and (max-width: 768px) {
+  .staff-medical-container {
+    padding: 12px;
+  }
+
+  .staff-medical-container h2 {
+    font-size: 20px;
+  }
+
+  table {
+    min-width: unset;
+    font-size: 12px;
+  }
+
+  th,
+  td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .view-button,
+  .forward-button,
+  .approve-button,
+  .reject-button {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  .modal-content {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .modal-content img {
+    max-height: 60vh;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .staff-medical-container h2 {
+    font-size: 18px;
+  }
+
+  .view-button,
+  .forward-button,
+  .approve-button,
+  .reject-button {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  th,
+  td {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+}
+/* Hide table on small screens */
+@media screen and (max-width: 768px) {
+  table {
+    display: none;
+  }
+
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .card-item {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 16px;
+    font-size: 14px;
+  }
+
+  .card-item h4 {
+    margin: 0 0 8px;
+    color: #003366;
+  }
+
+  .card-item p {
+    margin: 4px 0;
+  }
+
+  .card-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .card-actions button {
+    font-size: 13px;
+  }
 }

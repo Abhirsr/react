@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import supabase from "../supabaseClient";
 import { uploadMedicalCertificate } from "../api/uploadMedicalCertificate";
@@ -76,6 +76,7 @@ const MedicalLeave = () => {
           medical_certificate_url: proofFileUrl,
           created_at: submittedAt,
           submitted_by,
+          status: "Pending",
         });
 
       if (insertError) {
@@ -85,7 +86,7 @@ const MedicalLeave = () => {
         return;
       }
 
-      const commonPayload = {
+      await supabase.from("staff_medical_leave_requests").insert({
         name: formData.name,
         reg_no: formData.register_number,
         faculty_email: formData.faculty_mail,
@@ -97,9 +98,33 @@ const MedicalLeave = () => {
         status: "Pending",
         medical_doc_path: proofFileUrl,
         submitted_by,
-      };
+      });
 
-      await supabase.from("staff_medical_leave_requests").insert(commonPayload);
+      // ✅ Send email to the entered faculty
+      try {
+        const res = await fetch("http://localhost:5050/send-faculty-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            facultyEmail: formData.faculty_mail,
+            studentName: formData.name,
+            regNo: formData.register_number,
+            from: formData.from_date,
+            to: formData.to_date,
+            certificateUrl: proofFileUrl,
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          console.log("Faculty email sent:", data.message);
+        } else {
+          const err = await res.json();
+          console.error("Email failed:", err.error);
+        }
+      } catch (emailErr) {
+        console.error("Error sending faculty email:", emailErr);
+      }
 
       localStorage.setItem("user_register_number", formData.register_number);
       alert("Medical leave submitted successfully!");
