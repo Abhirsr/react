@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import supabase from "../supabaseClient";
-import { uploadInternshipOfferLetter } from "../api/uploadInternshipOfferLetter";
+//import { uploadInternshipOfferLetter } from "../api/uploadInternshipOfferLetter";
 import "./internship.css";
 import { DatePicker } from "antd";
 import "antd/dist/reset.css";
